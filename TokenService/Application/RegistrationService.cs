@@ -2,9 +2,7 @@
 using FluentValidation.Results;
 using Infrastructure.Models;
 using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 
 namespace Application
 {
@@ -12,6 +10,7 @@ namespace Application
     {
         public RegistrationService():base()
         {
+            EncryptSvc = new EncryptionService();
             DBService = new DBMSSQLService();
         }
 
@@ -29,17 +28,19 @@ namespace Application
         {
             
             try
-            {
+            {                 
                 ValidationResult results = uservalidation.Validate(user);
                 if (!results.IsValid)
                 {
                     foreach (var failure in results.Errors)
                     {
+                        //TODO: Emncapsulate the error creation swo we dont need to explicitly create it 
                         response.Body += "Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage;
                         response.httpstatus = HttpStatusCode.PreconditionFailed;
                     }
                 }
-                else { 
+                else 
+                { 
                     Users _user = mapper.Map<Users>(user);
                     _user.UserId = Guid.NewGuid();
                     _user.Salt = EncryptSvc.GetSalt();
@@ -53,8 +54,7 @@ namespace Application
                 }
             }
             catch (Exception ex)
-            {
-                
+            {                
                 string tmp = ex.Message + "            " + ex.StackTrace;
                 response.Body += tmp;
                 response.httpstatus = HttpStatusCode.InternalServerError;

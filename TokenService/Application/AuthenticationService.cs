@@ -1,21 +1,25 @@
 ﻿using Domain;
-using Infrastructure.Logging;
 using Infrastructure.Models;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.Json;
+using FluentValidation.Results;
 
 namespace Application
 {
-    public class AuthenticationService : BaseService
+    public class AuthenticationService : BaseService, IAuthenticationService
     {
 
         public AuthenticationService()
         {
         }
+
+        public AuthenticationService(string secretKey)
+        {
+            EncryptSvc =  new EncryptionService();
+            SecretKey = secretKey;
+            DBService = new DBMSSQLService();
+            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, SecretKey);
+        }
+
 
         public AuthenticationService(IEncryptionService encryptSvc, string secretKey)
         {
@@ -49,9 +53,10 @@ namespace Application
 
         public string Authenticate(UserLogin userLogin)
         {
-            string Authorization = String.Empty;            
+            string Authorization = String.Empty;
+            ValidationResult results = userloginvalidation.Validate(userLogin);
             Users users = mapper.Map<Users>(DBService.GetUser(userLogin.username));
-
+         
             if (users != null)
             {
                 if (CheckIsUser(userLogin, users))
@@ -65,15 +70,15 @@ namespace Application
             }
             return Authorization;
         }
-    
-        public bool CheckIsUser(UserLogin userLogin, Users users)
+
+        private bool CheckIsUser(UserLogin userLogin, Users users)
         {
             bool tmp = false;
-      
+
             if (users != null)
             {
                 var hash = EncryptSvc.GenerateSaltedHash(users.Salt, userLogin.password);
-                Log.Log.Information(hash.ToString());
+                Log.Log.Information(hash.ToString());  //TODO: remove after test case works 
                 if (EncryptSvc.VerifyPassword(userLogin.password, hash.Hash, hash.Salt))
                 {
                     tmp = true;

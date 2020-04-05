@@ -24,8 +24,8 @@ namespace Application
 
         public string GetToken(Users users)
         {
-            Header header = new Header { alg = "HS256", typ = "JWT" }; // This needs to be moved to the configuration 
-            Payload payload = new Payload { username = users.UserName, admin = true }; //This "admin" needs to be changed to a role claim.
+            Header header = new Header { alg = "HS256", typ = "JWT" }; //TODO: This needs to be moved to the configuration 
+            Payload payload = new Payload { username = users.UserName, admin = true }; //TODO: This "admin" needs to be changed to a role claim.
 
             JWTToken token = new JWTToken();
             token._header = header;
@@ -51,15 +51,15 @@ namespace Application
                 tmpBool = true;
             }
             return tmpBool;
-
         }
+
         public string GetSignature(string headerStr, string payloadStr, string SecretKey)
         {
             string value = EncryptSvc.Encrypt(Base64Encode(headerStr) + "." + Base64Encode(payloadStr), SecretKey);
             return value;
         }
         
-        // Need to move below to a helper class 
+        //TODO:  Need to move below to a helper class 
 
         public string UrlEncode(string tmpStr)
         {

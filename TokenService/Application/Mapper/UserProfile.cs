@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application
+namespace Application.Mapper
 {
     public class UserProfile: Profile
     {

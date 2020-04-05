@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Application;
 using Domain;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TokenService.Utility;
 
@@ -21,8 +16,7 @@ namespace TokenService.Controllers
         public IActionResult Post(User user)
         {
             string tmp = "";
-            IEncryptionService enscv = new EncryptionService();
-            RegistrationService registrationService = new RegistrationService(enscv);
+            RegistrationService registrationService = new RegistrationService();
             Response response = registrationService.SaveUser(user);
             if (response.httpstatus != HttpStatusCode.Created)
                 return BadRequest(new BadRequestError(response.Body));

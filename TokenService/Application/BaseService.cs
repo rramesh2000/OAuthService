@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Infrastructure.Logging;
 using Application.Validation;
 using Domain;
+using Application.Mapper;
 
 namespace Application
 {

@@ -16,6 +16,14 @@ namespace Application
         {
         }
 
+        public TokenValidationService( string secretKey)
+        {
+            EncryptSvc = new EncryptionService();
+            SecretKey = secretKey;
+            DBService = new DBMSSQLService();
+            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, SecretKey);
+        }
+
         public TokenValidationService(IEncryptionService encryptSvc, string secretKey)
         {
             EncryptSvc = encryptSvc;
