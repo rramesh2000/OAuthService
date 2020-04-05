@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Application;
 using Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TokenService.Utility;
 
 namespace TokenService.Controllers
 {
@@ -16,23 +18,16 @@ namespace TokenService.Controllers
 
         // POST: api/Token
         [HttpPost]
-        public string Post(User user)
+        public IActionResult Post(User user)
         {
-            string result = String.Empty;
-            try
-            {
-                IEncryptionService enscv = new EncryptionService();
-                RegistrationService registrationService = new RegistrationService(enscv);
-                if (registrationService.SaveUser(user))
-                {
-                    result = "Saved User";
-                }                                       
-            }
-            catch (Exception ex)
-            {
-                result = "Errorsaving User";
-            }
-            return result;
+            string tmp = "";
+            IEncryptionService enscv = new EncryptionService();
+            RegistrationService registrationService = new RegistrationService(enscv);
+            Response response = registrationService.SaveUser(user);
+            if (response.httpstatus != HttpStatusCode.Created)
+                return BadRequest(new BadRequestError(response.Body));
+            else
+                return Ok(tmp);
         }
 
 

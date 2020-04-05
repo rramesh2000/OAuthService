@@ -1,11 +1,12 @@
-﻿using Domain;
-using Infrastructure.Models;
+﻿using Infrastructure.Models;
 
 namespace Application
 {
     public interface IDBService
     {
+        OAuthContext oauth { get; set; }
+
         Users GetUser(string username);
-        bool SaveUser(Users user);
+        Users SaveUser(Users user);
     }
 }

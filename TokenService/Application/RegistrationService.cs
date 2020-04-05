@@ -1,7 +1,9 @@
 ﻿using Domain;
+using FluentValidation.Results;
 using Infrastructure.Models;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace Application
@@ -23,27 +25,41 @@ namespace Application
 
         public IEncryptionService EncryptSvc { get; set; }
 
-        public bool SaveUser(User user)
+        public Response SaveUser(User user)
         {
-            bool tmpBool = false;
+            
             try
             {
-                Users _user = mapper.Map<Users>(user);
-                _user.UserId = Guid.NewGuid();
-                _user.Salt = EncryptSvc.GetSalt();
-                _user.HashPassword = EncryptSvc.GenerateSaltedHash(_user.Salt, user.Password).Hash;
-                
-                if (DBService.SaveUser(_user))
+                ValidationResult results = uservalidation.Validate(user);
+                if (!results.IsValid)
                 {
-                    tmpBool = true;
+                    foreach (var failure in results.Errors)
+                    {
+                        response.Body += "Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage;
+                        response.httpstatus = HttpStatusCode.PreconditionFailed;
+                    }
+                }
+                else { 
+                    Users _user = mapper.Map<Users>(user);
+                    _user.UserId = Guid.NewGuid();
+                    _user.Salt = EncryptSvc.GetSalt();
+                    _user.HashPassword = EncryptSvc.GenerateSaltedHash(_user.Salt, user.Password).Hash;
+
+                    if (DBService.SaveUser(_user)!=null)
+                    {
+                        response.Body +="Success";
+                        response.httpstatus = HttpStatusCode.Created;
+                    }
                 }
             }
             catch (Exception ex)
             {
+                
                 string tmp = ex.Message + "            " + ex.StackTrace;
-                tmpBool = false;
+                response.Body += tmp;
+                response.httpstatus = HttpStatusCode.InternalServerError;
             }
-            return tmpBool;
+            return response;
         }
 
     }

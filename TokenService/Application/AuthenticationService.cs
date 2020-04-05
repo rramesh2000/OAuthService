@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Infrastructure.Logging;
 using Infrastructure.Models;
 using System;
 using System.Collections.Generic;
@@ -72,6 +73,7 @@ namespace Application
             if (users != null)
             {
                 var hash = EncryptSvc.GenerateSaltedHash(users.Salt, userLogin.password);
+                Log.Log.Information(hash.ToString());
                 if (EncryptSvc.VerifyPassword(userLogin.password, hash.Hash, hash.Salt))
                 {
                     tmp = true;

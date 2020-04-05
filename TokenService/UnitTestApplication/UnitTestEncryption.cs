@@ -1,24 +1,41 @@
 ﻿using Application;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+using System.Diagnostics;
 
 namespace UnitTestApplication
 {
     [TestClass]
     public class UnitTestEncryption
     {
+        private TestContext testContextInstance;
+
+        /// <summary>
+        ///  Gets or sets the test context which provides
+        ///  information about and functionality for the current test run.
+        ///</summary>
+        public TestContext TestContext
+        {
+            get { return testContextInstance; }
+            set { testContextInstance = value; }
+        }
+
+        public string Secret { get; set; }
         public EncryptionService encryptionService { get; set; }
         public UnitTestEncryption()
         {
+            Secret = "56345555555466666666666666666666758678679789780890956757";
             EncryptionService encryptionService = new EncryptionService();
         }
 
         [TestMethod]
         public void TestMethodEncrypt()
         {
+            Trace.Write("This is a test");
+            var obj1 = encryptionService.Encrypt("Testdata123", Secret);
+            var obj2 = encryptionService.Encrypt("Testdata321", Secret);
+            Trace.Write("code   "+ obj1.GetHashCode().ToString() + "        " + obj2.GetHashCode().ToString());
 
-            var obj1 = encryptionService.Encrypt("Testdata123", "huowrebcpyjfljghflwrtwrjtwpotmpwotui3tpeeensnsnsns2oa3ebau13b4e297");
-            var obj2 = encryptionService.Encrypt("Testdata321", "huowrebcpyjfljghflwrtwrjtwpotmpwotui3tpeeensnsnsns2oa3ebau13b4e297");
+
             //Console.WriteLine(obj1.GetHashCode() + "        "+ obj2.GetHashCode());
             Assert.IsTrue(obj1.GetHashCode() == obj2.GetHashCode());
         }
