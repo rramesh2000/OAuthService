@@ -1,6 +1,7 @@
 ﻿using Application.Common.Behaviours;
 using Application.Common.Interfaces;
 using Application.TokenValidation.Handlers;
+using Application.TokenValidation.Models;
 
 namespace Application.TokenValidation
 {
@@ -53,16 +54,14 @@ namespace Application.TokenValidation
         {
             try
             {
-                AuthorizationVm authorizationVm = new AuthorizationVm(authorization, false, SecretKey, JWTTokenService);
-                TokenValidationHandler h1 = new TokenVerificationHandler();
-                TokenValidationHandler h2 = new TokenRevocationHandler();
-                h1.SetSuccessor(h2);
-                h1.HandleRequest(authorizationVm);
+                AuthorizationDTO authorizationVm = new AuthorizationDTO(authorization, false, SecretKey, JWTTokenService);
+                var handler = new TokenVerificationHandler();
+                handler.SetNext(new TokenRevocationHandler());                
                 return true;
             }
             catch
             {
-                return false;
+               throw;
             }
             
         }

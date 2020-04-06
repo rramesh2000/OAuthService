@@ -4,6 +4,7 @@ using Infrastructure.Logging;
 using Domain;
 using Application.Common.Validation;
 using Application.Common.Mapper;
+using Domain.Common;
 
 namespace Application.Common.Interfaces
 {

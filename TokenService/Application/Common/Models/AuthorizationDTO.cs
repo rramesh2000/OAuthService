@@ -1,18 +1,14 @@
-﻿using Application.Common.Behaviours;
-using Application.Common.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Application.Common.Interfaces;
 
-namespace Application.TokenValidation
+namespace Application.TokenValidation.Models
 {
-    public class AuthorizationVm
+    public class AuthorizationDTO
     {
-        public AuthorizationVm()
+        public AuthorizationDTO()
         {
         }
 
-        public AuthorizationVm(string authorization, bool isValid, string secret, ITokenService jWTTokenService)
+        public AuthorizationDTO(string authorization, bool isValid, string secret, ITokenService jWTTokenService)
         {
             Authorization = authorization;
             IsValid = isValid;

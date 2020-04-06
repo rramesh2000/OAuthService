@@ -1,19 +1,18 @@
 ﻿using Application.Common.Behaviours;
 using Application.Common.Exceptions;
-using System;
+using Application.TokenValidation.Models;
 namespace Application.TokenValidation.Handlers
 {
-    public class TokenVerificationHandler : TokenValidationHandler
+    public class TokenVerificationHandler : Handler<AuthorizationDTO>
     {
-        public AuthorizationVm _auth { get; set; }
-        public override void HandleRequest(AuthorizationVm auth)
+        public override void Handle(AuthorizationDTO auth)
         {
-            _auth = auth;      
-            if (!_auth.JWTTokenService.VerifyToken(_auth.Authorization))
+            if (!auth.JWTTokenService.VerifyToken(auth.Authorization))
             {
                 throw new InvalidTokenException("Invalid Token");
             }
-            successor.HandleRequest(_auth);
+            base.Handle(auth);
         }
+
     }
 }

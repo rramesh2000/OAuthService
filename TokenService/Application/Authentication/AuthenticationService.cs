@@ -1,5 +1,7 @@
-﻿using Application.Common.Behaviours;
+﻿using Application.Authentication.Handlers;
+using Application.Common.Behaviours;
 using Application.Common.Interfaces;
+using Application.Common.Models;
 using Domain.Entities;
 using FluentValidation.Results;
 using Infrastructure.Models;
@@ -55,39 +57,29 @@ namespace Application
 
         public string Authenticate(UserLogin userLogin)
         {
-            string Authorization = String.Empty;
-            ValidationResult results = userloginvalidation.Validate(userLogin);
-            Users users = mapper.Map<Users>(DBService.GetUser(userLogin.username));
-
-            if (users != null)
+            string tmpStr = String.Empty;
+            try
             {
-                if (CheckIsUser(userLogin, users))
+                ValidationResult results = userloginvalidation.Validate(userLogin);
+                UserLoginDTO userLoginDTO = mapper.Map<UserLoginDTO>(userLogin);
+                userLoginDTO.users = mapper.Map<Users>(DBService.GetUser(userLogin.username));
+                userLoginDTO.encryptionService = new EncryptionService();
+
+                if (userLoginDTO.users != null)
                 {
-                    Authorization = JWTTokenService.GetToken(users);
+                    var handler = new UserAuthenticationHandler();
+                    tmpStr = JWTTokenService.GetToken(userLoginDTO.users);
                 }
             }
-            else
+            catch
             {
-                Authorization = "Unauthorised";
+                throw;
             }
-            return Authorization;
+
+            return tmpStr;
         }
 
-        private bool CheckIsUser(UserLogin userLogin, Users users)
-        {
-            bool tmp = false;
 
-            if (users != null)
-            {
-                var hash = EncryptSvc.GenerateSaltedHash(users.Salt, userLogin.password);
-                Log.Log.Information(hash.ToString());  //TODO: remove after test case works 
-                if (EncryptSvc.VerifyPassword(userLogin.password, hash.Hash, hash.Salt))
-                {
-                    tmp = true;
-                }
-            }
-            return tmp;
-        }
 
     }
 }

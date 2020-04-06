@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Application;
 using Domain;
+using Application.Common.Behaviours;
+using Application.TokenValidation;
 
 namespace UnitTestApplication
 {

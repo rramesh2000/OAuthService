@@ -1,6 +1,9 @@
 ﻿using System.Net;
 using Application;
+using Application.Registration;
 using Domain;
+using Domain.Common;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using TokenService.Utility;
 

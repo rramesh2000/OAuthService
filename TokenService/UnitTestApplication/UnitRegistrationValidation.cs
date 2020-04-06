@@ -1,4 +1,6 @@
 ﻿using Application;
+using Application.Common.Behaviours;
+using Application.Registration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTestApplication

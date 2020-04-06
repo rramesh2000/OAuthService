@@ -1,4 +1,5 @@
 ﻿using Application;
+using Application.Common.Behaviours;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 

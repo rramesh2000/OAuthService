@@ -1,5 +1,8 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Behaviours;
+using Application.Common.Interfaces;
 using Domain;
+using Domain.Common;
+using Domain.Entities;
 using FluentValidation.Results;
 using Infrastructure.Models;
 using System;
