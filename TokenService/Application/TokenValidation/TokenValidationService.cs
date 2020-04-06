@@ -59,7 +59,7 @@ namespace Application.TokenValidation
                 var handler = new TokenVerificationHandler();
                 handler.SetNext(new TokenRevocationHandler());
                 handler.Handle(authorizationVm);
-                return "Valid token"; 
+                return "Valid Token"; 
             }
             catch
             {

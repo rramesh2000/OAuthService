@@ -24,7 +24,7 @@ namespace UnitTestApplication
         [TestMethod]
         public void TestMethodVerifyToken()
         {
-            Assert.IsTrue(tokenValidationService.VerifyToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJpdGVzaCIsImFkbWluIjp0cnVlfQ==.5cocLLBW3HrXvgeQMzKiI5cDWWiUYcUA674BwWwxJM0="));
+            Assert.IsTrue(tokenValidationService.VerifyToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJpdGVzaCIsImFkbWluIjp0cnVlfQ==.5cocLLBW3HrXvgeQMzKiI5cDWWiUYcUA674BwWwxJM0=")== "Valid Token");
         }
 
          

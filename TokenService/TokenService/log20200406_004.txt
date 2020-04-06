@@ -25,3 +25,8 @@ Application.Common.Models.UserDTO -> Domain.Entities.User
    at lambda_method(Closure , UserDTO , User , ResolutionContext )
    at lambda_method(Closure , Object , Object , ResolutionContext )
    at Application.Registration.RegistrationService.SaveUser(UserDTO userdto)
+2020-04-06 23:09:14.001 +10:00 [ERR] Missing type map configuration or unsupported mapping.
+
+Mapping types:
+UserLoginDTO -> UserLogin
+Application.Common.Models.UserLoginDTO -> Domain.Entities.UserLogin
