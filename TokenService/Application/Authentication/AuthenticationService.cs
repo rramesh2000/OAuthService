@@ -67,10 +67,12 @@ namespace Application
                 userLoginDTO.encryptionService = new EncryptionService();
                                
                 var handler = new UserAuthenticationHandler();
+                handler.Handle(userLoginDTO);
                 tmpStr = JWTTokenService.GetToken(userLoginDTO.users);                 
             }
-            catch
+            catch(Exception ex)
             {
+                Log.Log.Error(ex.Message, "Invalid User");
                 throw new InvalidUserException("Invalid User");
             }
 

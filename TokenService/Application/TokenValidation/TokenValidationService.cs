@@ -58,6 +58,7 @@ namespace Application.TokenValidation
                 AuthorizationDTO authorizationVm = new AuthorizationDTO(authorization, false, SecretKey, JWTTokenService);
                 var handler = new TokenVerificationHandler();
                 handler.SetNext(new TokenRevocationHandler());
+                handler.Handle(authorizationVm);
                 return "Valid token"; 
             }
             catch
