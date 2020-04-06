@@ -1,40 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Application;
+﻿using Application;
+using Application.Common.Exceptions;
+using Application.Common.Models;
 using Application.TokenValidation;
-using Domain;
 using Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
+using TokenService.Utility;
 
 namespace TokenService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class TokenController : BaseController
-    {       
+    {
 
         public TokenController(IConfiguration config)
         {
-         
+
         }
 
         // POST: api/Token
         [HttpPost]
-        public IActionResult Post(UserLogin user)
+        public IActionResult Post(UserLoginDTO user)
         {
             string Authorization = null;
             try
-            {              
+            {
                 AuthenticationService tm = new AuthenticationService(base.Configuration["Secretkey"]);
                 Authorization = tm.Authenticate(user);
             }
+            catch (InvalidUserException exUser)
+            {
+                return Unauthorized(new UnauthorizedError(exUser.Message));
+            }
             catch (Exception ex)
             {
-                //TODO: Genrate approporiate error 
+                return Unauthorized(new UnauthorizedError(ex.Message));
             }
             return Ok(Authorization);
         }
@@ -44,25 +46,27 @@ namespace TokenService.Controllers
         [Route("/api/token/verify")]
         public IActionResult Post(AccessToken auth)
         {
-            string tmp = "Invalid token";
+            string tmp = String.Empty;
             try
-            {                
+            {
                 TokenValidationService tm = new TokenValidationService(base.Configuration["Secretkey"]);
-                if (tm.VerifyToken(auth.Authorization))
-                {
-                    tmp = "Valid token";                
-                }
+                tmp = tm.VerifyToken(auth.Authorization);
+               
+            }
+            catch (InvalidTokenException exToken)
+            {
+                return Unauthorized(new UnauthorizedError(exToken.Message));
             }
             catch (Exception ex)
             {
-                //TODO: Genrate approporiate error 
+                return Unauthorized(new UnauthorizedError(ex.Message));
             }
             return Ok(tmp);
         }
 
- 
 
- 
+
+
     }
 }
 

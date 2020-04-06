@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Application.Common.Models;
+using AutoMapper;
 using Domain;
 using Domain.Entities;
 using Infrastructure.Models;
@@ -13,6 +14,7 @@ namespace Application.Common.Mapper
         public UserProfile()
         {
             CreateMap<User, Users>();
+            CreateMap<User, UserDTO>().ReverseMap(); 
         }
     }
 }

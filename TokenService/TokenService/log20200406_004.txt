@@ -1,0 +1,27 @@
+2020-04-06 21:34:04.804 +10:00 [ERR] Cannot create User
+AutoMapper.AutoMapperMappingException: Missing type map configuration or unsupported mapping.
+
+Mapping types:
+UserDTO -> User
+Application.Common.Models.UserDTO -> Domain.Entities.User
+   at lambda_method(Closure , UserDTO , User , ResolutionContext )
+   at lambda_method(Closure , Object , Object , ResolutionContext )
+   at Application.Registration.RegistrationService.SaveUser(UserDTO userdto) in D:\Work\Projects\OAuth\TokenService\Application\Registration\RegistrationService.cs:line 37
+2020-04-06 22:03:33.114 +10:00 [ERR] Cannot create User
+AutoMapper.AutoMapperMappingException: Missing type map configuration or unsupported mapping.
+
+Mapping types:
+UserDTO -> User
+Application.Common.Models.UserDTO -> Domain.Entities.User
+   at lambda_method(Closure , UserDTO , User , ResolutionContext )
+   at lambda_method(Closure , Object , Object , ResolutionContext )
+   at Application.Registration.RegistrationService.SaveUser(UserDTO userdto) in D:\Work\Projects\OAuth\TokenService\Application\Registration\RegistrationService.cs:line 37
+2020-04-06 22:15:26.859 +10:00 [ERR] Cannot create User
+AutoMapper.AutoMapperMappingException: Missing type map configuration or unsupported mapping.
+
+Mapping types:
+UserDTO -> User
+Application.Common.Models.UserDTO -> Domain.Entities.User
+   at lambda_method(Closure , UserDTO , User , ResolutionContext )
+   at lambda_method(Closure , Object , Object , ResolutionContext )
+   at Application.Registration.RegistrationService.SaveUser(UserDTO userdto)

@@ -1,4 +1,5 @@
 ﻿using Application.Common.Behaviours;
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.TokenValidation.Handlers;
 using Application.TokenValidation.Models;
@@ -50,18 +51,18 @@ namespace Application.TokenValidation
         }
 
 
-        public bool VerifyToken(string authorization)
+        public string VerifyToken(string authorization)
         {
             try
             {
                 AuthorizationDTO authorizationVm = new AuthorizationDTO(authorization, false, SecretKey, JWTTokenService);
                 var handler = new TokenVerificationHandler();
-                handler.SetNext(new TokenRevocationHandler());                
-                return true;
+                handler.SetNext(new TokenRevocationHandler());
+                return "Valid token"; 
             }
             catch
             {
-               throw;
+                throw new InvalidTokenException("Invalid Token");
             }
             
         }

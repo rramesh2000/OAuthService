@@ -1,10 +1,8 @@
-﻿using System.Net;
-using Application;
+﻿using Application.Common.Exceptions;
+using Application.Common.Models;
 using Application.Registration;
-using Domain;
-using Domain.Common;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using TokenService.Utility;
 
 namespace TokenService.Controllers
@@ -16,15 +14,22 @@ namespace TokenService.Controllers
 
         // POST: api/Token
         [HttpPost]
-        public IActionResult Post(User user)
+        public IActionResult Post(UserDTO user)
         {
-            string tmp = "";
-            RegistrationService registrationService = new RegistrationService();
-            Response response = registrationService.SaveUser(user);
-            if (response.httpstatus != HttpStatusCode.Created)
-                return BadRequest(new BadRequestError(response.Body));
-            else
-                return Ok(tmp);
+            try
+            {
+                RegistrationService registrationService = new RegistrationService();
+                user = registrationService.SaveUser(user);
+            }
+            catch (InvalidUserException exUser)
+            {
+                return BadRequest(new BadRequestError(exUser.Message));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new BadRequestError(ex.Message));
+            }
+            return Ok(user);
         }
 
 

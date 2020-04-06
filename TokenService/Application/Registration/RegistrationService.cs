@@ -1,6 +1,7 @@
 ﻿using Application.Common.Behaviours;
 using Application.Common.Interfaces;
-using Domain;
+using Application.Common.Models;
+using Application.Common.Exceptions;
 using Domain.Common;
 using Domain.Entities;
 using FluentValidation.Results;
@@ -10,9 +11,9 @@ using System.Net;
 
 namespace Application.Registration
 {
-    public class RegistrationService:BaseService
+    public class RegistrationService : BaseService
     {
-        public RegistrationService():base()
+        public RegistrationService() : base()
         {
             EncryptSvc = new EncryptionService();
             DBService = new DBMSSQLService();
@@ -28,42 +29,47 @@ namespace Application.Registration
 
         public IEncryptionService EncryptSvc { get; set; }
 
-        public Response SaveUser(User user)
+        public UserDTO SaveUser(UserDTO userdto)
         {
-            
+
             try
-            {                 
+            {
+                User user = mapper.Map<User>(userdto);
                 ValidationResult results = uservalidation.Validate(user);
                 if (!results.IsValid)
                 {
+                    string failures = String.Empty;
                     foreach (var failure in results.Errors)
                     {
-                        //TODO: Emncapsulate the error creation swo we dont need to explicitly create it 
-                        response.Body += "Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage;
-                        response.httpstatus = HttpStatusCode.PreconditionFailed;
+                        //TODO: Use projection and remove the for loop 
+                        failures += "Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage;
                     }
+                    throw new InvalidUserException(failures);
                 }
-                else 
-                { 
+                else
+                {
                     Users _user = mapper.Map<Users>(user);
                     _user.UserId = Guid.NewGuid();
                     _user.Salt = EncryptSvc.GetSalt();
                     _user.HashPassword = EncryptSvc.GenerateSaltedHash(_user.Salt, user.Password).Hash;
 
-                    if (DBService.SaveUser(_user)!=null)
+                    if (DBService.SaveUser(_user) != null)
                     {
-                        response.Body +="Success";
+                        response.Body += "Success";
                         response.httpstatus = HttpStatusCode.Created;
                     }
                 }
             }
-            catch (Exception ex)
-            {                
-                string tmp = ex.Message + "            " + ex.StackTrace;
-                response.Body += tmp;
-                response.httpstatus = HttpStatusCode.InternalServerError;
+            catch (InvalidUserException exUser)
+            {
+                throw new InvalidUserException(exUser.Message);
             }
-            return response;
+            catch (Exception ex)
+            {
+                Log.Log.Error(ex, "Cannot create User"); 
+                throw new InvalidUserException("Cannot create User");
+            }
+            return userdto;
         }
 
     }

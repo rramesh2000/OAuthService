@@ -1,5 +1,6 @@
 ﻿using Application.Authentication.Handlers;
 using Application.Common.Behaviours;
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Domain.Entities;
@@ -55,25 +56,22 @@ namespace Application
 
         public string SecretKey { get; set; }
 
-        public string Authenticate(UserLogin userLogin)
+        public string Authenticate(UserLoginDTO userLoginDTO)
         {
             string tmpStr = String.Empty;
             try
             {
-                ValidationResult results = userloginvalidation.Validate(userLogin);
-                UserLoginDTO userLoginDTO = mapper.Map<UserLoginDTO>(userLogin);
+                UserLogin userLogin = mapper.Map<UserLogin>(userLoginDTO);
+                ValidationResult results = userloginvalidation.Validate(userLogin);                
                 userLoginDTO.users = mapper.Map<Users>(DBService.GetUser(userLogin.username));
                 userLoginDTO.encryptionService = new EncryptionService();
-
-                if (userLoginDTO.users != null)
-                {
-                    var handler = new UserAuthenticationHandler();
-                    tmpStr = JWTTokenService.GetToken(userLoginDTO.users);
-                }
+                               
+                var handler = new UserAuthenticationHandler();
+                tmpStr = JWTTokenService.GetToken(userLoginDTO.users);                 
             }
             catch
             {
-                throw;
+                throw new InvalidUserException("Invalid User");
             }
 
             return tmpStr;

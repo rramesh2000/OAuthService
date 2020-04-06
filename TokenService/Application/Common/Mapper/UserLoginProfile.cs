@@ -13,7 +13,7 @@ namespace Application.Common.Mapper
     {
         public UserLoginProfile()
         {
-            CreateMap<UserLogin,UserLoginDTO>();
+            CreateMap<UserLogin,UserLoginDTO>().ReverseMap();
         }
     }
 }
