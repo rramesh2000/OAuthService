@@ -51,7 +51,7 @@ namespace Application.Common.Behaviours
             string tokenStr = Base64Encode(headerStr) + "." + Base64Encode(payloadStr) + "." + signatureStr;
             return tokenStr;
         }
-        
+
         public string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];

@@ -1,8 +1,7 @@
-# OAuthService in .Net Core 
- rramesh2000/angular.js
+# OAuthService in .Net Core by Ritesh Ramesh
 
  
- ## OAuth Service in 
+ ## OAuth Service  
  
  This is an open source OAuth Service written in .Net Core 
  
@@ -36,6 +35,12 @@
  Access tokens are shortlived between 5 - 10 mins while refresh tokens are longlived 1 to 2 weeks. 
  The idea is you use the refresh token to retrive new access tokens periodically (E.g: every 15 mins). 
  Only one refresh token is issued per user at any given time. 
+ 
+ ### Validation 
+ 
+ You can use /api/token/verify and pass the access token to verify if its still valid this will be done by your resource servers. 
+ 
+ ### Revocation 
  
  You can revoke the refresh token at anytime which will invalidate the accesstokens. 
  
