@@ -51,14 +51,13 @@ namespace Application.TokenValidation
             SecretKey = secretKey;
         }
 
-
         public string VerifyToken(AccessTokenDTO auth)
         {
             try
             {
                 AuthorizationDTO authorizationVm = new AuthorizationDTO(auth.Authorization, false, SecretKey, JWTTokenService);
                 var handler = new TokenVerificationHandler();
-                handler.SetNext(new TokenRevocationHandler());
+                handler.SetNext(new TokenTimeVerificationHandler()).SetNext(new TokenRevocationHandler());
                 handler.Handle(authorizationVm);
                 return "Valid Token"; 
             }

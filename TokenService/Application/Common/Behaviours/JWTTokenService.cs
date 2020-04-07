@@ -1,9 +1,7 @@
 ﻿using Application.Common.Interfaces;
-using Domain;
 using Domain.ValueObjects;
 using Infrastructure.Models;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
@@ -26,8 +24,20 @@ namespace Application.Common.Behaviours
 
         public string GetToken(Users users)
         {
-            Header header = new Header { alg = "HS256", typ = "JWT" }; //TODO: This needs to be moved to the configuration 
-            Payload payload = new Payload { username = users.UserName, admin = true }; //TODO: This "admin" needs to be changed to a role claim.
+            int tokenExpiery = 5;
+            Header header = new Header { alg = "HS256", typ = "JWT" }; //TODO: This needs to be moved to the configuration             
+            Payload payload = new Payload
+            {
+                iss = "OAuthService",
+                sub = users.UserName,
+                exp = new TimeSpan(0, 0, tokenExpiery, 0, 0).TotalSeconds.ToString(),
+                iat = DateTime.Now.ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'"),
+                nbf = DateTime.Now.AddMinutes(tokenExpiery).ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'"),
+                jti = Guid.NewGuid().ToString(),
+                username = users.UserName,
+                admin = true
+            };
+
 
             JWTToken token = new JWTToken();
             token._header = header;
@@ -55,12 +65,27 @@ namespace Application.Common.Behaviours
             return tmpBool;
         }
 
+
+        public bool VerifyTokenTime(string token)
+        {
+
+            bool tmpBool = false;
+            string[] arr = token.Split('.');
+            string headerStr = Base64Decode(arr[0]);
+            Payload payloadStr = JsonSerializer.Deserialize<Payload>(Base64Decode(arr[1]));
+            if (DateTimeOffset.Parse(payloadStr.nbf).UtcDateTime >= DateTime.Now.ToUniversalTime())
+            {
+                tmpBool = true;
+            }
+            return tmpBool;
+        }
+
         public string GetSignature(string headerStr, string payloadStr, string SecretKey)
         {
             string value = EncryptSvc.Encrypt(Base64Encode(headerStr) + "." + Base64Encode(payloadStr), SecretKey);
             return value;
         }
-        
+
         //TODO:  Need to move below to a helper class 
 
         public string UrlEncode(string tmpStr)
