@@ -1,13 +1,18 @@
 ﻿using Application.Common.Behaviours;
 using Infrastructure.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Common.Models
-{ 
-      public class UserLoginDTO
+{
+    public class UserLoginDTO
     {
+        public UserLoginDTO()
+        {
+            this.username = username;
+            this.password = password;
+            this.users =  new Users();
+            this.encryptionService = new EncryptionService();
+        }
+
         public string username { get; set; }
         public string password { get; set; }
 

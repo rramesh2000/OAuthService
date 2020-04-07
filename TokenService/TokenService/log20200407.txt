@@ -1,0 +1,5 @@
+2020-04-07 15:31:25.636 +10:00 [ERR] Missing type map configuration or unsupported mapping.
+
+Mapping types:
+UserLoginDTO -> UserLogin
+Application.Common.Models.UserLoginDTO -> Domain.Entities.UserLogin

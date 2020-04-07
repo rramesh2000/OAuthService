@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using AutoMapper;
+using Domain.Entities;
 using Infrastructure.Models;
 using System;
 using System.Linq;
@@ -35,14 +36,14 @@ namespace Application.Common.Behaviours
         }
 
 
-        public Users SaveUser(Users user)
+        public Users SaveUser(User user)
         {
-            Users u = new Users();
+            Users u = mapper.Map<Users>(user);
             try
             {
-                oauth.Users.Add(user);
-                oauth.SaveChanges();
-                u = user;
+                //TODO: Prevent addoing duplicate user with same username
+                oauth.Users.Add(u);
+                oauth.SaveChanges();               
             }
             catch (Exception ex)
             {

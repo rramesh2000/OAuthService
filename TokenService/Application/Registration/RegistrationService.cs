@@ -1,13 +1,10 @@
 ﻿using Application.Common.Behaviours;
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
-using Application.Common.Exceptions;
-using Domain.Common;
 using Domain.Entities;
 using FluentValidation.Results;
-using Infrastructure.Models;
 using System;
-using System.Net;
 
 namespace Application.Registration
 {
@@ -31,7 +28,6 @@ namespace Application.Registration
 
         public UserDTO SaveUser(UserDTO userdto)
         {
-
             try
             {
                 User user = mapper.Map<User>(userdto);
@@ -39,25 +35,20 @@ namespace Application.Registration
                 if (!results.IsValid)
                 {
                     string failures = String.Empty;
+                    //TODO: Use projection and remove the for loop 
                     foreach (var failure in results.Errors)
                     {
-                        //TODO: Use projection and remove the for loop 
                         failures += "Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage;
                     }
                     throw new InvalidUserException(failures);
                 }
                 else
                 {
-                    Users _user = mapper.Map<Users>(user);
-                    _user.UserId = Guid.NewGuid();
-                    _user.Salt = EncryptSvc.GetSalt();
-                    _user.HashPassword = EncryptSvc.GenerateSaltedHash(_user.Salt, user.Password).Hash;
-
-                    if (DBService.SaveUser(_user) != null)
-                    {
-                        response.Body += "Success";
-                        response.httpstatus = HttpStatusCode.Created;
-                    }
+                    user.UserId = Guid.NewGuid();
+                    user.Salt = EncryptSvc.GetSalt();
+                    user.HashPassword = EncryptSvc.GenerateSaltedHash(user.Salt, user.Password).Hash;
+                    user = mapper.Map<User>(DBService.SaveUser(user));
+                    userdto = mapper.Map<UserDTO>(user);
                 }
             }
             catch (InvalidUserException exUser)
@@ -66,7 +57,7 @@ namespace Application.Registration
             }
             catch (Exception ex)
             {
-                Log.Log.Error(ex, "Cannot create User"); 
+                Log.Log.Error(ex, "Cannot create User");
                 throw new InvalidUserException("Cannot create User");
             }
             return userdto;

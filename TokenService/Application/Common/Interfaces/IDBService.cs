@@ -1,4 +1,5 @@
-﻿using Infrastructure.Models;
+﻿using Domain.Entities;
+using Infrastructure.Models;
 
 namespace Application.Common.Interfaces
 {
@@ -6,6 +7,6 @@ namespace Application.Common.Interfaces
     {
         OAuthContext oauth { get; set; }
         Users GetUser(string username);
-        Users SaveUser(Users user);
+        Users SaveUser(User user);
     }
 }

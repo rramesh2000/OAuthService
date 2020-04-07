@@ -12,6 +12,11 @@ namespace Application
 {
     public class AuthenticationService : BaseService, IAuthenticationService
     {
+        public ITokenService JWTTokenService { get; set; }
+        public IDBService DBService { get; set; }
+
+        public IEncryptionService EncryptSvc { get; set; }
+        public string SecretKey { get; set; }
 
         public AuthenticationService()
         {
@@ -24,7 +29,6 @@ namespace Application
             DBService = new DBMSSQLService();
             JWTTokenService = new JWTTokenService(DBService, EncryptSvc, SecretKey);
         }
-
 
         public AuthenticationService(IEncryptionService encryptSvc, string secretKey)
         {
@@ -49,12 +53,6 @@ namespace Application
             SecretKey = secretKey;
         }
 
-        public ITokenService JWTTokenService { get; set; }
-        public IDBService DBService { get; set; }
-
-        public IEncryptionService EncryptSvc { get; set; }
-
-        public string SecretKey { get; set; }
 
         public string Authenticate(UserLoginDTO userLoginDTO)
         {
@@ -78,8 +76,5 @@ namespace Application
 
             return tmpStr;
         }
-
-
-
     }
 }

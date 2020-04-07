@@ -13,8 +13,9 @@ namespace Application.Common.Mapper
     {
         public UserProfile()
         {
-            CreateMap<User, Users>();
-            CreateMap<User, UserDTO>().ReverseMap(); 
+            CreateMap<User, Users>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<UserLoginDTO, UserLogin>().ReverseMap();
         }
     }
 }

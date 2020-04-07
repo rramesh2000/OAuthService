@@ -18,7 +18,7 @@ namespace Application.Common.Interfaces
 
         public UserValidation uservalidation { get; set; }
 
-        public Response response { get; set; }
+       
         public BaseService()
         {
             var config = new MapperConfiguration(cfg =>
@@ -34,7 +34,7 @@ namespace Application.Common.Interfaces
 
             uservalidation = new UserValidation();
                        
-            response = new Response();
+          
         }
     }
 }
