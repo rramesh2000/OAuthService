@@ -9,7 +9,7 @@
  The OAuth design uses JWT style tokens to impliment OAuth flows. 
  
  
- ##Architecture
+ ## Architecture
  
  This .Net core service is built on clean architecture principles.
  
@@ -32,7 +32,7 @@
  
  ## Usage
  
- Using the /api/token login with a username and password and get an access token and refresh token.
+ Using the api/token login with a username and password you can get an access token and refresh token.
  Access tokens are shortlived between 5 - 10 mins while refresh tokens are longlived 1 to 2 weeks. 
  The idea is you use the refresh token to retrive new access tokens periodically (E.g: every 15 mins). 
  Only one refresh token is issued per user at any given time. 
