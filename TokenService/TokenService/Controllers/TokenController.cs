@@ -23,7 +23,7 @@ namespace TokenService.Controllers
         [HttpPost]
         public IActionResult Post(UserLoginDTO user)
         {
-            string Authorization = null;
+            AuthenticationDTO Authorization = new AuthenticationDTO();
             try
             {
                 AuthenticationService tm = new AuthenticationService(base.Configuration["Secretkey"]);

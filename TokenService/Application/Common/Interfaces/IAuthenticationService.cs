@@ -5,6 +5,6 @@ namespace Application.Common.Interfaces
 {
     public interface IAuthenticationService
     {
-        string Authenticate(UserLoginDTO userLogin);
+        AuthenticationDTO Authenticate(UserLoginDTO userLogin);
     }
 }

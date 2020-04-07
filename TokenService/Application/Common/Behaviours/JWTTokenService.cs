@@ -2,11 +2,13 @@
 using Domain.ValueObjects;
 using Infrastructure.Models;
 using System;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
 namespace Application.Common.Behaviours
 {
+    //TODO: Refactor this using Facade pattern 
     public class JWTTokenService : ITokenService
     {
         public JWTTokenService(IDBService dBService, IEncryptionService encryptSvc, string secretKey)
@@ -48,6 +50,16 @@ namespace Application.Common.Behaviours
             string signatureStr = GetSignature(headerStr, payloadStr, SecretKey);
             string tokenStr = Base64Encode(headerStr) + "." + Base64Encode(payloadStr) + "." + signatureStr;
             return tokenStr;
+        }
+        
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
         }
 
         public bool VerifyToken(string token)

@@ -25,9 +25,19 @@
  
  ## Error handling 
  
+ Invalid User Error indicates that the user credentials are invalid. 
+ Invalid Token Errro inidcates that the token is invalid.
+ 
  ## Installation
  
- # Usage
+ ## Usage
+ 
+ Using the /api/token login with a username and password and get an access token and refresh token.
+ Access tokens are shortlived between 5 - 10 mins while refresh tokens are longlived 1 to 2 weeks. 
+ The idea is you use the refresh token to retrive new access tokens periodically (E.g: every 15 mins). 
+ Only one refresh token is issued per user at any given time. 
+ 
+ You can revoke the refresh token at anytime which will invalidate the accesstokens. 
  
  ## Extending 
   

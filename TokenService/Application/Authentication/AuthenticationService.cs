@@ -54,9 +54,9 @@ namespace Application
         }
 
 
-        public string Authenticate(UserLoginDTO userLoginDTO)
+        public AuthenticationDTO Authenticate(UserLoginDTO userLoginDTO)
         {
-            string tmpStr = String.Empty;
+            AuthenticationDTO auth = new AuthenticationDTO();
             try
             {
                 UserLogin userLogin = mapper.Map<UserLogin>(userLoginDTO);
@@ -66,7 +66,9 @@ namespace Application
                                
                 var handler = new UserAuthenticationHandler();
                 handler.Handle(userLoginDTO);
-                tmpStr = JWTTokenService.GetToken(userLoginDTO.users);                 
+                auth.token_type = "bearer";
+                auth.access_token = JWTTokenService.GetToken(userLoginDTO.users);                 
+                auth.refresh_token = JWTTokenService.GetToken(userLoginDTO.users);
             }
             catch(Exception ex)
             {
@@ -74,7 +76,7 @@ namespace Application
                 throw new InvalidUserException("Invalid User");
             }
 
-            return tmpStr;
+            return auth;
         }
     }
 }
