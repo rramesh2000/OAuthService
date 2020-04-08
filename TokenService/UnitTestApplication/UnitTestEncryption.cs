@@ -35,8 +35,6 @@ namespace UnitTestApplication
             var obj1 = encryptionService.Encrypt("Testdata123", Secret);
             var obj2 = encryptionService.Encrypt("Testdata321", Secret);
             Trace.Write("code   "+ obj1.GetHashCode().ToString() + "        " + obj2.GetHashCode().ToString());
-
-
             //Console.WriteLine(obj1.GetHashCode() + "        "+ obj2.GetHashCode());
             Assert.IsTrue(obj1.GetHashCode() == obj2.GetHashCode());
         }

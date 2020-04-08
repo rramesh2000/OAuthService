@@ -13,7 +13,7 @@ namespace Infrastructure.Logging
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
             Log = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
-            
+
         }
     }
 }
