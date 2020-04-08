@@ -3,6 +3,7 @@ using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Domain.Entities;
+using Domain.Enums;
 using FluentValidation.Results;
 using System;
 
@@ -57,8 +58,8 @@ namespace Application.Registration
             }
             catch (Exception ex)
             {
-                Log.Log.Error(ex, "Cannot create User");
-                throw new InvalidUserException("Cannot create User");
+                Log.Log.Error(ex, TokenConstants.CannotCreateUser);
+                throw new InvalidUserException(TokenConstants.CannotCreateUser);
             }
             return userdto;
         }
