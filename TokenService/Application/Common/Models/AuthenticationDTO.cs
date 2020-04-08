@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Common.Models
+﻿namespace Application.Common.Models
 {
     public class AuthenticationDTO
     {
-        public string token_type  { get; set; }
+        public string token_type { get; set; }
         public string access_token { get; set; }
-        public string  refresh_token { get; set; }
+        public string refresh_token { get; set; }
     }
 }

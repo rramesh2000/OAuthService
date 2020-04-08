@@ -1,3 +1,14 @@
 {
-  "Secretkey": "56345555555466666666666666666666758678679789780890956757"
+  "Secretkey": "56345555555466666666666666666666758678679789780890956757",
+  "AccessTokenLife": 5,
+  "TokenType": "Bearer",
+  "jwt": {
+    "header": {
+      "alg": "HS256",
+      "typ": "JWT"
+    },
+    "payload": {
+      "iss": "OAuthService"
+    }    
+  }
 }

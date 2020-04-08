@@ -26,7 +26,7 @@ namespace TokenService.Controllers
             AuthenticationDTO Authorization = new AuthenticationDTO();
             try
             {
-                AuthenticationService tm = new AuthenticationService(base.Configuration["Secretkey"]);
+                AuthenticationService tm = new AuthenticationService(base.Configuration);
                 Authorization = tm.Authenticate(user);
             }
             catch (InvalidUserException exUser)
@@ -48,7 +48,7 @@ namespace TokenService.Controllers
             string tmp = String.Empty;
             try
             {
-                TokenValidationService tm = new TokenValidationService(base.Configuration["Secretkey"]);
+                TokenValidationService tm = new TokenValidationService(base.Configuration);
                 tmp = tm.VerifyToken(auth);               
             }
             catch (InvalidTokenException exToken)

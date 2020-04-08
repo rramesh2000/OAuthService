@@ -11,7 +11,6 @@ namespace TokenService.Controllers
     [ApiController]
     public class RegisterController : ControllerBase
     {
-
         // POST: api/Token
         [HttpPost]
         public IActionResult Post(UserDTO user)
@@ -30,8 +29,6 @@ namespace TokenService.Controllers
                 return BadRequest(new BadRequestError(ex.Message));
             }
             return Ok(user);
-        }
-
-
+        }        
     }
 }

@@ -1,36 +1,44 @@
 ﻿using Application.Common.Interfaces;
 using Domain.ValueObjects;
 using Infrastructure.Models;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using Application.Common.Behaviours.JWT;
 
 namespace Application.Common.Behaviours
 {
     //TODO: Refactor this using Facade pattern 
-    public class JWTTokenService : ITokenService
+    public class JWTTokenService : BaseService, ITokenService
     {
-        public JWTTokenService(IDBService dBService, IEncryptionService encryptSvc, string secretKey)
-        {
-            DBService = dBService;
-            EncryptSvc = encryptSvc;
-            SecretKey = secretKey;
-        }
-
         public IDBService DBService { get; set; }
 
         public IEncryptionService EncryptSvc { get; set; }
 
         public string SecretKey { get; set; }
 
+        public IConfiguration Configuration { get; set; }
+
+        public JWTTokenService(IDBService dBService, IEncryptionService encryptSvc, IConfiguration configuration)
+        {
+            DBService = dBService;
+            EncryptSvc = encryptSvc;            
+            config = configuration;
+            SecretKey = config["Secretkey"];
+        }
+
         public string GetToken(Users users)
         {
-            int tokenExpiery = 5;
-            Header header = new Header { alg = "HS256", typ = "JWT" }; //TODO: This needs to be moved to the configuration             
+            int tokenExpiery = Int32.Parse(config["AccessTokenLife"]);
+            Header header = new Header {
+                alg = config.GetValue<string>("jwt:header:alg"),
+                typ = config.GetValue<string>("jwt:header:typ")
+            }; //TODO: This needs to be moved to the configuration             
             Payload payload = new Payload
             {
-                iss = "OAuthService",
+                iss = config.GetValue<string>("jwt:payload:iss"),
                 sub = users.UserName,
                 exp = new TimeSpan(0, 0, tokenExpiery, 0, 0).TotalSeconds.ToString(),
                 iat = DateTime.Now.ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'"),
@@ -40,7 +48,6 @@ namespace Application.Common.Behaviours
                 admin = true
             };
 
-
             JWTToken token = new JWTToken();
             token._header = header;
             token._payload = payload;
@@ -48,7 +55,7 @@ namespace Application.Common.Behaviours
             string headerStr = JsonSerializer.Serialize(header);
             string payloadStr = JsonSerializer.Serialize(payload);
             string signatureStr = GetSignature(headerStr, payloadStr, SecretKey);
-            string tokenStr = Base64Encode(headerStr) + "." + Base64Encode(payloadStr) + "." + signatureStr;
+            string tokenStr = headerStr.Base64Encode() + "." + payloadStr.Base64Encode() + "." + signatureStr;
             return tokenStr;
         }
 
@@ -66,8 +73,8 @@ namespace Application.Common.Behaviours
         {
             bool tmpBool = false;
             string[] arr = token.Split('.');
-            string headerStr = Base64Decode(arr[0]);
-            string payloadStr = Base64Decode(arr[1]);
+            string headerStr = arr[0].Base64Decode();
+            string payloadStr = arr[1].Base64Decode();
             string passedSignatureStr = arr[2];
             string signatureStr = GetSignature(headerStr, payloadStr, SecretKey);
             if (passedSignatureStr == signatureStr)
@@ -80,11 +87,10 @@ namespace Application.Common.Behaviours
 
         public bool VerifyTokenTime(string token)
         {
-
             bool tmpBool = false;
             string[] arr = token.Split('.');
-            string headerStr = Base64Decode(arr[0]);
-            Payload payloadStr = JsonSerializer.Deserialize<Payload>(Base64Decode(arr[1]));
+            string headerStr = arr[0].Base64Decode();
+            Payload payloadStr = JsonSerializer.Deserialize<Payload>(arr[1].Base64Decode());
             if (DateTimeOffset.Parse(payloadStr.nbf).UtcDateTime >= DateTime.Now.ToUniversalTime())
             {
                 tmpBool = true;
@@ -94,31 +100,10 @@ namespace Application.Common.Behaviours
 
         public string GetSignature(string headerStr, string payloadStr, string SecretKey)
         {
-            string value = EncryptSvc.Encrypt(Base64Encode(headerStr) + "." + Base64Encode(payloadStr), SecretKey);
+            string value = EncryptSvc.Encrypt(headerStr.Base64Encode() + "." + payloadStr.Base64Encode(), SecretKey);
             return value;
         }
 
-        //TODO:  Need to move below to a helper class 
-
-        public string UrlEncode(string tmpStr)
-        {
-            return System.Web.HttpUtility.UrlEncode(tmpStr);
-        }
-
-        public string Base64Encode(string tmpStr)
-        {
-            string base64Encoded;
-            byte[] data = Encoding.UTF8.GetBytes(tmpStr);
-            base64Encoded = System.Convert.ToBase64String(data);
-            return base64Encoded;
-        }
-
-        public string Base64Decode(string tmpStr)
-        {
-            string base64Decoded;
-            byte[] data = Convert.FromBase64String(tmpStr);
-            base64Decoded = Encoding.UTF8.GetString(data);
-            return base64Decoded;
-        }
+ 
     }
 }

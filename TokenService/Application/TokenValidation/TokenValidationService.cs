@@ -4,6 +4,8 @@ using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.TokenValidation.Handlers;
 using Application.TokenValidation.Models;
+using Domain.Enums;
+using Microsoft.Extensions.Configuration;
 
 namespace Application.TokenValidation
 {
@@ -14,58 +16,57 @@ namespace Application.TokenValidation
 
         public IEncryptionService EncryptSvc { get; set; }
 
-        public string SecretKey { get; set; }
+        public string configuration { get; set; }
 
         public TokenValidationService()
         {
         }
 
-        public TokenValidationService(string secretKey)
+        public TokenValidationService(IConfiguration configuration)
         {
             EncryptSvc = new EncryptionService();
-            SecretKey = secretKey;
+
             DBService = new DBMSSQLService();
-            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, SecretKey);
+            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, configuration);
         }
 
-        public TokenValidationService(IEncryptionService encryptSvc, string secretKey)
+        public TokenValidationService(IEncryptionService encryptSvc, IConfiguration configuration)
         {
             EncryptSvc = encryptSvc;
-            SecretKey = secretKey;
             DBService = new DBMSSQLService();
-            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, SecretKey);
+            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, configuration);
         }
 
-        public TokenValidationService(IDBService dBService, IEncryptionService encryptSvc, string secretKey)
+        public TokenValidationService(IDBService dBService, IEncryptionService encryptSvc, IConfiguration configuration)
         {
             DBService = dBService;
             EncryptSvc = encryptSvc;
-            SecretKey = secretKey;
         }
 
-        public TokenValidationService(ITokenService jWTTokenService, IDBService dBService, IEncryptionService encryptSvc, string secretKey)
+        public TokenValidationService(ITokenService jWTTokenService, IDBService dBService, IEncryptionService encryptSvc, IConfiguration configuration)
         {
             JWTTokenService = jWTTokenService;
             DBService = dBService;
             EncryptSvc = encryptSvc;
-            SecretKey = secretKey;
+
         }
 
         public string VerifyToken(AccessTokenDTO auth)
         {
             try
             {
+                string SecretKey = config["Secretkey"];
                 AuthorizationDTO authorizationVm = new AuthorizationDTO(auth.Authorization, false, SecretKey, JWTTokenService);
                 var handler = new TokenVerificationHandler();
                 handler.SetNext(new TokenTimeVerificationHandler()).SetNext(new TokenRevocationHandler());
                 handler.Handle(authorizationVm);
-                return "Valid Token"; 
+                return TokenConstants.ValidToken;
             }
             catch
             {
-                throw new InvalidTokenException("Invalid Token");
+                throw new InvalidTokenException(TokenConstants.InvalidToken);
             }
-            
+
         }
 
     }

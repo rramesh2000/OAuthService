@@ -4,8 +4,10 @@ using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Domain.Entities;
+using Domain.Enums;
 using FluentValidation.Results;
 using Infrastructure.Models;
+using Microsoft.Extensions.Configuration;
 using System;
 
 namespace Application
@@ -22,37 +24,36 @@ namespace Application
         {
         }
 
-        public AuthenticationService(string secretKey)
+        public AuthenticationService(IConfiguration configuration)
         {
+            config = configuration;
             EncryptSvc = new EncryptionService();
-            SecretKey = secretKey;
             DBService = new DBMSSQLService();
-            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, SecretKey);
+            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, configuration);
         }
 
-        public AuthenticationService(IEncryptionService encryptSvc, string secretKey)
+        public AuthenticationService(IEncryptionService encryptSvc, IConfiguration configuration)
         {
+            config = configuration;
             EncryptSvc = encryptSvc;
-            SecretKey = secretKey;
             DBService = new DBMSSQLService();
-            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, SecretKey);
+            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, configuration);
         }
 
-        public AuthenticationService(IDBService dBService, IEncryptionService encryptSvc, string secretKey)
+        public AuthenticationService(IDBService dBService, IEncryptionService encryptSvc, IConfiguration configuration)
         {
+            config = configuration;
             DBService = dBService;
             EncryptSvc = encryptSvc;
-            SecretKey = secretKey;
         }
 
-        public AuthenticationService(ITokenService jWTTokenService, IDBService dBService, IEncryptionService encryptSvc, string secretKey)
+        public AuthenticationService(ITokenService jWTTokenService, IDBService dBService, IEncryptionService encryptSvc, IConfiguration configuration)
         {
+            config = configuration;
             JWTTokenService = jWTTokenService;
             DBService = dBService;
             EncryptSvc = encryptSvc;
-            SecretKey = secretKey;
         }
-
 
         public AuthenticationDTO Authenticate(UserLoginDTO userLoginDTO)
         {
@@ -60,20 +61,20 @@ namespace Application
             try
             {
                 UserLogin userLogin = mapper.Map<UserLogin>(userLoginDTO);
-                ValidationResult results = userloginvalidation.Validate(userLogin);                
+                ValidationResult results = userloginvalidation.Validate(userLogin);
                 userLoginDTO.users = mapper.Map<Users>(DBService.GetUser(userLogin.username));
                 userLoginDTO.encryptionService = new EncryptionService();
-                               
+
                 var handler = new UserAuthenticationHandler();
                 handler.Handle(userLoginDTO);
-                auth.token_type = "bearer";
-                auth.access_token = JWTTokenService.GetToken(userLoginDTO.users);                 
+                auth.token_type = config["TokenType"];
+                auth.access_token = JWTTokenService.GetToken(userLoginDTO.users);
                 auth.refresh_token = JWTTokenService.GetToken(userLoginDTO.users);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Log.Log.Error(ex.Message, "Invalid User");
-                throw new InvalidUserException("Invalid User");
+                Log.Log.Error(ex.Message, TokenConstants.InvalidUser);
+                throw new InvalidUserException(TokenConstants.InvalidUser);
             }
 
             return auth;
