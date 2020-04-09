@@ -12,8 +12,6 @@ namespace Application.Common.Behaviours
     //TODO: Refactor this using Facade pattern 
     public class JWTTokenService : BaseService, ITokenService
     {
-
-
         public IEncryptionService EncryptSvc { get; set; }
 
         public string SecretKey { get; set; }
@@ -35,7 +33,7 @@ namespace Application.Common.Behaviours
             {
                 alg = config.GetValue<string>("jwt:header:alg"),
                 typ = config.GetValue<string>("jwt:header:typ")
-            }; //TODO: This needs to be moved to the configuration             
+            };
             Payload payload = new Payload
             {
                 iss = config.GetValue<string>("jwt:payload:iss"),

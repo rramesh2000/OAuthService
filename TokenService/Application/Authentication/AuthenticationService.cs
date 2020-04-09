@@ -31,7 +31,7 @@ namespace Application
             DBService = new DBMSSQLService();
             JWTTokenService = new JWTTokenService(EncryptSvc, configuration);
         }
-               
+
         public AuthenticationDTO Authenticate(UserLoginDTO userLoginDTO)
         {
             AuthenticationDTO auth = new AuthenticationDTO();
@@ -56,14 +56,13 @@ namespace Application
             return auth;
         }
 
-    
         public AuthenticationDTO RefreshToken(RefreshTokenDTO refauth)
         {
             AuthenticationDTO auth = new AuthenticationDTO();
             try
             {
                 //ValidationResult results = userloginvalidation.Validate(userLogin);
-                Users users = DBService.GetUserFromRefreshToken(refauth.Authorization);           
+                Users users = DBService.GetUserFromRefreshToken(refauth.Authorization);
                 auth.token_type = config["TokenType"];
                 auth.access_token = JWTTokenService.GetToken(users);
                 auth.refresh_token = GetRefreshToken(users.UserName);

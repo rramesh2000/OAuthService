@@ -1,18 +1,15 @@
 ﻿using Application.Common.Behaviours;
 using Domain.ValueObjects;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NUnitTestApplication
 {
-    class NUnitTestEncryption
+    internal class NUnitTestEncryption
     {
-        EncryptionService encryptionService;
-        string storedSalt = "";
-        string enteredPassword = "";
-        string storedHash = "";
+        private EncryptionService encryptionService;
+        private string storedSalt = "";
+        private string enteredPassword = "";
+        private string storedHash = "";
 
         [SetUp]
         public void Setup()
@@ -25,7 +22,7 @@ namespace NUnitTestApplication
 
         [Test]
         public void TestVerifyPassword()
-        {            
+        {
             Assert.IsTrue(encryptionService.VerifyPassword(enteredPassword, storedHash, storedSalt));
         }
 
@@ -33,7 +30,7 @@ namespace NUnitTestApplication
         public void TestGetSalt()
         {
             string tmp = encryptionService.GetSalt();
-            Assert.IsTrue(tmp.Length > 0); 
+            Assert.IsTrue(tmp.Length > 0);
             string tmp1 = encryptionService.GetSalt();
             Assert.AreNotEqual(tmp, tmp1);
         }

@@ -28,31 +28,31 @@
  
  ## Usage
  
- ### Register User 
- Usage: (POST) api/register
+ ### Register User   
+ Usage: (POST) api/register    
  Description: Using this API you can register new users. This API accepts a username and password then returns a full User.  
  
- ### Login User 
- Usage : (POST) api/token
- Description: Using this API with a username and password  in teh request you can get an access token and refresh token.
+ ### Login User  
+ Usage : (POST) api/token  
+ Description: Using this API with a username and password  in teh request you can get an access token and refresh token.  
  ** Access tokens are shortlived between 5 - 10 mins while refresh tokens are longlived 1 to 2 weeks. 
- ** The idea is you use the refresh token to retrive new access tokens periodically (E.g: every 15 mins). 
+ ** The idea is you use the refresh token to retrive new access tokens periodically (E.g: every 15 mins).  
  
- ### Verify Token: 
- Usage : (POST) api/token/verify
- Description: Using this API you can verify if a token is still valid. 
+ ### Verify Token:   
+ Usage : (POST) api/token/verify  
+ Description: Using this API you can verify if a token is still valid.  
  
- ### Refresh Token: 
- Usage : (POST) api/token/refresh
- Description: Using this APi you can provide an existing refresh token and retrieve a new refresh token and access token.
- Only one Refresh Token is issued per user at any given time. 
+ ### Refresh Token   
+ Usage : (POST) api/token/refresh   
+ Description: Using this APi you can provide an existing refresh token and retrieve a new refresh token and access token.  
+ Only one Refresh Token is issued per user at any given time.   
   
- ### Revocation 
- Usage : (POST) api/token/revoke
- Description:  You can revoke the refresh token at anytime which will invalidate the accesstokens. 
+ ### Revocation   
+ Usage : (POST) api/token/revoke   
+ Description:  You can revoke the refresh token at anytime which will invalidate the accesstokens.   
  
- ## Extending 
- The User credentials has been kept relatively simple with no authorization built out of the box. The idea is to allow users of this Oauth service to integrate it easily with any existing authorization system or extend this to build the authorization out as required.  
+ ## Extending   
+ The User credentials has been kept relatively simple with no authorization built out of the box. The idea is to allow users of this Oauth service to integrate it easily with any existing authorization system or extend this to build the authorization out as required.   
  
  
  ## Contributing

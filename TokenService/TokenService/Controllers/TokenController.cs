@@ -17,8 +17,6 @@ namespace TokenService.Controllers
         {
         }
 
-
-        // POST: api/Token
         [HttpPost]
         public IActionResult Post(UserLoginDTO user)
         {
@@ -39,7 +37,6 @@ namespace TokenService.Controllers
             return Ok(Authorization);
         }
 
-
         [HttpPost]
         [Route("/api/token/verify")]
         public IActionResult Post(AccessTokenDTO auth)
@@ -48,7 +45,7 @@ namespace TokenService.Controllers
             try
             {
                 TokenValidationService tm = new TokenValidationService(configuration);
-                tmp = tm.VerifyToken(auth);               
+                tmp = tm.VerifyToken(auth);
             }
             catch (InvalidTokenException exToken)
             {
@@ -61,9 +58,6 @@ namespace TokenService.Controllers
             return Ok(tmp);
         }
 
-
-
-        // POST: api/Token
         [HttpPost]
         [Route("/api/token/refresh")]
         public IActionResult Post(RefreshTokenDTO auth)
