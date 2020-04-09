@@ -27,7 +27,7 @@ namespace Application.TokenValidation
             EncryptSvc = new EncryptionService();
             this.configuration = configuration;
             DBService = new DBMSSQLService();
-            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, this.configuration);
+            JWTTokenService = new JWTTokenService(EncryptSvc, this.configuration);
         }
 
      

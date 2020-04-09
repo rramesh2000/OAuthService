@@ -29,7 +29,7 @@ namespace Application
             config = configuration;
             EncryptSvc = new EncryptionService();
             DBService = new DBMSSQLService();
-            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, configuration);
+            JWTTokenService = new JWTTokenService(EncryptSvc, configuration);
         }
 
 

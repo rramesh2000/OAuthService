@@ -1,19 +1,18 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Behaviours.JWT;
+using Application.Common.Interfaces;
 using Domain.ValueObjects;
 using Infrastructure.Models;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
-using Application.Common.Behaviours.JWT;
 
 namespace Application.Common.Behaviours
 {
     //TODO: Refactor this using Facade pattern 
     public class JWTTokenService : BaseService, ITokenService
     {
-        public IDBService DBService { get; set; }
+
 
         public IEncryptionService EncryptSvc { get; set; }
 
@@ -21,10 +20,10 @@ namespace Application.Common.Behaviours
 
         public IConfiguration Configuration { get; set; }
 
-        public JWTTokenService(IDBService dBService, IEncryptionService encryptSvc, IConfiguration configuration)
+        public JWTTokenService(IEncryptionService encryptSvc, IConfiguration configuration)
         {
-            DBService = dBService;
-            EncryptSvc = encryptSvc;            
+
+            EncryptSvc = encryptSvc;
             config = configuration;
             SecretKey = config["Secretkey"];
         }
@@ -32,7 +31,8 @@ namespace Application.Common.Behaviours
         public string GetToken(Users users)
         {
             int tokenExpiery = Int32.Parse(config["AccessTokenLife"]);
-            Header header = new Header {
+            Header header = new Header
+            {
                 alg = config.GetValue<string>("jwt:header:alg"),
                 typ = config.GetValue<string>("jwt:header:typ")
             }; //TODO: This needs to be moved to the configuration             
@@ -104,6 +104,6 @@ namespace Application.Common.Behaviours
             return value;
         }
 
- 
+
     }
 }

@@ -25,8 +25,7 @@ namespace NUnitTestApplication
 
         [Test]
         public void TestVerifyPassword()
-        {
-            
+        {            
             Assert.IsTrue(encryptionService.VerifyPassword(enteredPassword, storedHash, storedSalt));
         }
 
@@ -43,10 +42,8 @@ namespace NUnitTestApplication
         public void TestGenerateSaltedHash()
         {
             HashSalt hashSalt = encryptionService.GenerateSaltedHash(storedSalt, "Test12345677");
-            HashSalt hashSalt1 = encryptionService.GenerateSaltedHash(storedSalt, "Test12345678");
-            Assert.AreEqual(hashSalt.Hash.Length, hashSalt1.Hash.Length);
-
-
+            HashSalt hashSalt1 = encryptionService.GenerateSaltedHash(storedSalt, "Test12345677");
+            Assert.AreEqual(hashSalt.Hash.GetHashCode(), hashSalt1.Hash.GetHashCode());
         }
     }
 }
