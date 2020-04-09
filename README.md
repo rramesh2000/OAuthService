@@ -3,10 +3,8 @@
  
  ## OAuth Service  
  
- This is an open source OAuth Service written in .Net Core 
- 
- The OAuth design uses JWT style tokens to impliment OAuth flows. 
- 
+ This is an open source OAuth Service written in .Net Core  
+ The OAuth design uses JWT style tokens to impliment OAuth flows.  
  
  ## Architecture
  
@@ -21,11 +19,10 @@
  
  You can use any other type of token by implimenting the ITokenService interface.  
  
- 
  ## Error handling 
  
- Invalid User Error indicates that the user credentials are invalid. 
- Invalid Token Errro inidcates that the token is invalid.
+ Invalid User Error indicates that the user credentials are invalid.   
+ Invalid Token Errro inidcates that the token is invalid.  
  
  ## Installation
  
@@ -42,28 +39,26 @@
  ** The idea is you use the refresh token to retrive new access tokens periodically (E.g: every 15 mins). 
  
  ### Verify Token: 
- Usage : (POST) api/token
+ Usage : (POST) api/token/verify
  Description: Using this API you can verify if a token is still valid. 
  
  ### Refresh Token: 
- Usage : (POST) api/token
+ Usage : (POST) api/token/refresh
  Description: Using this APi you can provide an existing refresh token and retrieve a new refresh token and access token.
  Only one Refresh Token is issued per user at any given time. 
- 
- ### Validation 
- 
- You can use /api/token/verify and pass the access token to verify if its still valid this will be done by your resource servers. 
- 
+  
  ### Revocation 
- 
- You can revoke the refresh token at anytime which will invalidate the accesstokens. 
+ Usage : (POST) api/token/revoke
+ Description:  You can revoke the refresh token at anytime which will invalidate the accesstokens. 
  
  ## Extending 
-  
+ The User credentials has been kept relatively simple with no authorization built out of the box. The idea is to allow users of this Oauth service to integrate it easily with any existing authorization system or extend this to build the authorization out as required.  
+ 
+ 
  ## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+ Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-Please make sure to update tests as appropriate.
+ Please make sure to update tests as appropriate.
  
  ## License
 [MIT](https://choosealicense.com/licenses/mit/)
