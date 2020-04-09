@@ -16,7 +16,7 @@ namespace Application.TokenValidation
 
         public IEncryptionService EncryptSvc { get; set; }
 
-        public string configuration { get; set; }
+        public IConfiguration configuration { get; set; }
 
         public TokenValidationService()
         {
@@ -25,37 +25,18 @@ namespace Application.TokenValidation
         public TokenValidationService(IConfiguration configuration)
         {
             EncryptSvc = new EncryptionService();
-
+            this.configuration = configuration;
             DBService = new DBMSSQLService();
-            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, configuration);
+            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, this.configuration);
         }
 
-        public TokenValidationService(IEncryptionService encryptSvc, IConfiguration configuration)
-        {
-            EncryptSvc = encryptSvc;
-            DBService = new DBMSSQLService();
-            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, configuration);
-        }
-
-        public TokenValidationService(IDBService dBService, IEncryptionService encryptSvc, IConfiguration configuration)
-        {
-            DBService = dBService;
-            EncryptSvc = encryptSvc;
-        }
-
-        public TokenValidationService(ITokenService jWTTokenService, IDBService dBService, IEncryptionService encryptSvc, IConfiguration configuration)
-        {
-            JWTTokenService = jWTTokenService;
-            DBService = dBService;
-            EncryptSvc = encryptSvc;
-
-        }
+     
 
         public string VerifyToken(AccessTokenDTO auth)
         {
             try
             {
-                string SecretKey = config["Secretkey"];
+                string SecretKey = configuration["Secretkey"];
                 AuthorizationDTO authorizationVm = new AuthorizationDTO(auth.Authorization, false, SecretKey, JWTTokenService);
                 var handler = new TokenVerificationHandler();
                 handler.SetNext(new TokenTimeVerificationHandler()).SetNext(new TokenRevocationHandler());

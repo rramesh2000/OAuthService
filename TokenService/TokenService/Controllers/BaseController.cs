@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System.Configuration;
 
 namespace TokenService.Controllers
 {
@@ -7,12 +8,11 @@ namespace TokenService.Controllers
     [ApiController]
     public class BaseController : ControllerBase
     {
-        public IConfiguration Configuration { get; set; }
-        public BaseController()
+        public IConfiguration configuration;
+
+        public BaseController(IConfiguration configuration)
         {
-            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddJsonFile("config.json", true);
-            Configuration = configurationBuilder.Build();
+            this.configuration = configuration;
         }
     }
 }

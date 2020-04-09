@@ -13,11 +13,10 @@ namespace TokenService.Controllers
     [ApiController]
     public class TokenController : BaseController
     {
-
-        public TokenController(IConfiguration config)
+        public TokenController(IConfiguration configuration) : base(configuration)
         {
-
         }
+
 
         // POST: api/Token
         [HttpPost]
@@ -26,7 +25,7 @@ namespace TokenService.Controllers
             AuthenticationDTO Authorization = new AuthenticationDTO();
             try
             {
-                AuthenticationService tm = new AuthenticationService(base.Configuration);
+                AuthenticationService tm = new AuthenticationService(configuration);
                 Authorization = tm.Authenticate(user);
             }
             catch (InvalidUserException exUser)
@@ -48,7 +47,7 @@ namespace TokenService.Controllers
             string tmp = String.Empty;
             try
             {
-                TokenValidationService tm = new TokenValidationService(base.Configuration);
+                TokenValidationService tm = new TokenValidationService(configuration);
                 tmp = tm.VerifyToken(auth);               
             }
             catch (InvalidTokenException exToken)

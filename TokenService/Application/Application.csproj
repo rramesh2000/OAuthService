@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TokenValidation\TokenValidationService.cs~RF61fb3516.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />
   </ItemGroup>

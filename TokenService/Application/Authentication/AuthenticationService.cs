@@ -32,28 +32,7 @@ namespace Application
             JWTTokenService = new JWTTokenService(DBService, EncryptSvc, configuration);
         }
 
-        public AuthenticationService(IEncryptionService encryptSvc, IConfiguration configuration)
-        {
-            config = configuration;
-            EncryptSvc = encryptSvc;
-            DBService = new DBMSSQLService();
-            JWTTokenService = new JWTTokenService(DBService, EncryptSvc, configuration);
-        }
 
-        public AuthenticationService(IDBService dBService, IEncryptionService encryptSvc, IConfiguration configuration)
-        {
-            config = configuration;
-            DBService = dBService;
-            EncryptSvc = encryptSvc;
-        }
-
-        public AuthenticationService(ITokenService jWTTokenService, IDBService dBService, IEncryptionService encryptSvc, IConfiguration configuration)
-        {
-            config = configuration;
-            JWTTokenService = jWTTokenService;
-            DBService = dBService;
-            EncryptSvc = encryptSvc;
-        }
 
         public AuthenticationDTO Authenticate(UserLoginDTO userLoginDTO)
         {
