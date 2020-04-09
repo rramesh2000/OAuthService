@@ -31,10 +31,24 @@
  
  ## Usage
  
- Using the api/token login with a username and password you can get an access token and refresh token.
- Access tokens are shortlived between 5 - 10 mins while refresh tokens are longlived 1 to 2 weeks. 
- The idea is you use the refresh token to retrive new access tokens periodically (E.g: every 15 mins). 
- Only one refresh token is issued per user at any given time. 
+ ### Register User 
+ Usage: (POST) api/register
+ Description: Using this API you can register new users. This API accepts a username and password then returns a full User.  
+ 
+ ### Login User 
+ Usage : (POST) api/token
+ Description: Using this API with a username and password  in teh request you can get an access token and refresh token.
+ ** Access tokens are shortlived between 5 - 10 mins while refresh tokens are longlived 1 to 2 weeks. 
+ ** The idea is you use the refresh token to retrive new access tokens periodically (E.g: every 15 mins). 
+ 
+ ### Verify Token: 
+ Usage : (POST) api/token
+ Description: Using this API you can verify if a token is still valid. 
+ 
+ ### Refresh Token: 
+ Usage : (POST) api/token
+ Description: Using this APi you can provide an existing refresh token and retrieve a new refresh token and access token.
+ Only one Refresh Token is issued per user at any given time. 
  
  ### Validation 
  

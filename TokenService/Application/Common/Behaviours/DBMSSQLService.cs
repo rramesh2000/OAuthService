@@ -35,6 +35,22 @@ namespace Application.Common.Behaviours
             return null;
         }
 
+        public void UpdateUserRefreshToken(string username, string refresh_token)
+        {
+            Users user = oauth.Users.Where(x => x.UserName == username).FirstOrDefault();
+            user.RefreshToken = refresh_token;
+            oauth.Update(user);
+            oauth.SaveChanges();
+        }
+        public Users GetUserFromRefreshToken(string refreshtoken)
+        {
+            if (!String.IsNullOrEmpty(refreshtoken))
+            {
+                Users user = oauth.Users.Where(x => x.RefreshToken == refreshtoken).FirstOrDefault();
+                return user;
+            }
+            return null;
+        }
 
         public Users SaveUser(User user)
         {
@@ -43,7 +59,7 @@ namespace Application.Common.Behaviours
             {
                 //TODO: Prevent addoing duplicate user with same username
                 oauth.Users.Add(u);
-                oauth.SaveChanges();               
+                oauth.SaveChanges();
             }
             catch (Exception ex)
             {

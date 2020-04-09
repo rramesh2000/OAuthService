@@ -31,9 +31,7 @@ namespace Application
             DBService = new DBMSSQLService();
             JWTTokenService = new JWTTokenService(EncryptSvc, configuration);
         }
-
-
-
+               
         public AuthenticationDTO Authenticate(UserLoginDTO userLoginDTO)
         {
             AuthenticationDTO auth = new AuthenticationDTO();
@@ -48,15 +46,42 @@ namespace Application
                 handler.Handle(userLoginDTO);
                 auth.token_type = config["TokenType"];
                 auth.access_token = JWTTokenService.GetToken(userLoginDTO.users);
-                auth.refresh_token = JWTTokenService.GetToken(userLoginDTO.users);
+                auth.refresh_token = GetRefreshToken(userLoginDTO.username);
             }
             catch (Exception ex)
             {
                 Log.Log.Error(ex.Message, TokenConstants.InvalidUser);
                 throw new InvalidUserException(TokenConstants.InvalidUser);
             }
-
             return auth;
         }
+
+    
+        public AuthenticationDTO RefreshToken(RefreshTokenDTO refauth)
+        {
+            AuthenticationDTO auth = new AuthenticationDTO();
+            try
+            {
+                //ValidationResult results = userloginvalidation.Validate(userLogin);
+                Users users = DBService.GetUserFromRefreshToken(refauth.Authorization);           
+                auth.token_type = config["TokenType"];
+                auth.access_token = JWTTokenService.GetToken(users);
+                auth.refresh_token = GetRefreshToken(users.UserName);
+            }
+            catch (Exception ex)
+            {
+                Log.Log.Error(ex.Message, TokenConstants.InvalidUser);
+                throw new InvalidUserException(TokenConstants.InvalidUser);
+            }
+            return auth;
+        }
+
+        private string GetRefreshToken(string username)
+        {
+            string refresh_token = JWTTokenService.GenerateRefreshToken();
+            DBService.UpdateUserRefreshToken(username, refresh_token);
+            return refresh_token;
+        }
+
     }
 }

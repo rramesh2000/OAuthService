@@ -63,6 +63,27 @@ namespace TokenService.Controllers
 
 
 
+        // POST: api/Token
+        [HttpPost]
+        [Route("/api/token/refresh")]
+        public IActionResult Post(RefreshTokenDTO auth)
+        {
+            AuthenticationDTO Authorization = new AuthenticationDTO();
+            try
+            {
+                AuthenticationService tm = new AuthenticationService(configuration);
+                Authorization = tm.RefreshToken(auth);
+            }
+            catch (InvalidUserException exUser)
+            {
+                return Unauthorized(new UnauthorizedError(exUser.Message));
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(new UnauthorizedError(ex.Message));
+            }
+            return Ok(Authorization);
+        }
 
     }
 }

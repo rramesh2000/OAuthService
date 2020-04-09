@@ -8,5 +8,7 @@ namespace Application.Common.Interfaces
         OAuthContext oauth { get; set; }
         Users GetUser(string username);
         Users SaveUser(User user);
+        Users GetUserFromRefreshToken(string authorization);
+        void UpdateUserRefreshToken(string username, string refresh_token);
     }
 }
