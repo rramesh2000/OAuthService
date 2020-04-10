@@ -45,7 +45,7 @@ namespace Application
                 var handler = new UserAuthenticationHandler();
                 handler.Handle(userLoginDTO);
                 auth.token_type = config["TokenType"];
-                auth.access_token = JWTTokenService.GetToken(userLoginDTO.users);
+                auth.access_token = JWTTokenService.GenerateAccessToken(userLoginDTO.users);
                 auth.refresh_token = GetRefreshToken(userLoginDTO.username);
             }
             catch (Exception ex)
@@ -64,7 +64,7 @@ namespace Application
                 //ValidationResult results = userloginvalidation.Validate(userLogin);
                 Users users = DBService.GetUserFromRefreshToken(refauth.Authorization);
                 auth.token_type = config["TokenType"];
-                auth.access_token = JWTTokenService.GetToken(users);
+                auth.access_token = JWTTokenService.GenerateAccessToken(users);
                 auth.refresh_token = GetRefreshToken(users.UserName);
             }
             catch (Exception ex)

@@ -26,7 +26,7 @@ namespace Application.Common.Behaviours
             SecretKey = config["Secretkey"];
         }
 
-        public string GetToken(Users users)
+        public string GenerateAccessToken(Users users)
         {
             int tokenExpiery = Int32.Parse(config["AccessTokenLife"]);
             Header header = new Header
@@ -67,7 +67,7 @@ namespace Application.Common.Behaviours
             }
         }
 
-        public bool VerifyToken(string token)
+        public bool VerifyAccessToken(string token)
         {
             bool tmpBool = false;
             string[] arr = token.Split('.');
@@ -82,8 +82,7 @@ namespace Application.Common.Behaviours
             return tmpBool;
         }
 
-
-        public bool VerifyTokenTime(string token)
+        public bool VerifyAccessTokenTime(string token)
         {
             bool tmpBool = false;
             string[] arr = token.Split('.');
@@ -96,12 +95,10 @@ namespace Application.Common.Behaviours
             return tmpBool;
         }
 
-        public string GetSignature(string headerStr, string payloadStr, string SecretKey)
+        private string GetSignature(string headerStr, string payloadStr, string SecretKey)
         {
             string value = EncryptSvc.Encrypt(headerStr.Base64Encode() + "." + payloadStr.Base64Encode(), SecretKey);
             return value;
         }
-
-
     }
 }

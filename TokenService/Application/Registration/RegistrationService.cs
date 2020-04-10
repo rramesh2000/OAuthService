@@ -47,7 +47,7 @@ namespace Application.Registration
                 {
                     user.UserId = Guid.NewGuid();
                     user.Salt = EncryptSvc.GetSalt();
-                    user.HashPassword = EncryptSvc.GenerateSaltedHash(user.Salt, user.Password).Hash;
+                    user.HashPassword = EncryptSvc.GenerateSaltedHashPassword(user.Salt, user.Password).Hash;
                     user = mapper.Map<User>(DBService.SaveUser(user));
                     userdto = mapper.Map<UserDTO>(user);
                 }

@@ -38,8 +38,8 @@ namespace NUnitTestApplication
         [Test]
         public void TestGenerateSaltedHash()
         {
-            HashSalt hashSalt = encryptionService.GenerateSaltedHash(storedSalt, "Test12345677");
-            HashSalt hashSalt1 = encryptionService.GenerateSaltedHash(storedSalt, "Test12345677");
+            HashSalt hashSalt = encryptionService.GenerateSaltedHashPassword(storedSalt, "Test12345677");
+            HashSalt hashSalt1 = encryptionService.GenerateSaltedHashPassword(storedSalt, "Test12345677");
             Assert.AreEqual(hashSalt.Hash.GetHashCode(), hashSalt1.Hash.GetHashCode());
         }
     }

@@ -24,7 +24,7 @@ namespace Application.Common.Behaviours
             return encodedSignature;
         }
 
-        public HashSalt GenerateSaltedHash(string salt, string password)
+        public HashSalt GenerateSaltedHashPassword(string salt, string password)
         {
             var saltBytes = Encoding.UTF8.GetBytes(salt);
             var provider = new RNGCryptoServiceProvider();

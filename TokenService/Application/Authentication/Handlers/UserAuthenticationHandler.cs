@@ -15,7 +15,7 @@ namespace Application.Authentication.Handlers
 
         public override void Handle(UserLoginDTO userLogin)
         {
-            var hash = userLogin.encryptionService.GenerateSaltedHash(userLogin.users.Salt, userLogin.password);
+            var hash = userLogin.encryptionService.GenerateSaltedHashPassword(userLogin.users.Salt, userLogin.password);
             //TODO: Need to impliment this 
             if (!userLogin.encryptionService.VerifyPassword(userLogin.password, hash.Hash, hash.Salt))
             {

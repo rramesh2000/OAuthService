@@ -57,9 +57,15 @@ namespace Application.Common.Behaviours
             Users u = mapper.Map<Users>(user);
             try
             {
-                //TODO: Prevent addoing duplicate user with same username
-                oauth.Users.Add(u);
-                oauth.SaveChanges();
+                if (oauth.Users.Where(x => x.UserName == user.Username).Count() < 1)
+                {
+                    oauth.Users.Add(u);
+                    oauth.SaveChanges();
+                }
+                else
+                {
+                    throw new DuplicateWaitObjectException();
+                }
             }
             catch (Exception ex)
             {

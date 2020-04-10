@@ -7,7 +7,7 @@ namespace Application.TokenValidation.Handlers
     {
         public override void Handle(AuthorizationDTO auth)
         {
-            if (!auth.JWTTokenService.VerifyTokenTime(auth.Authorization))
+            if (!auth.JWTTokenService.VerifyAccessTokenTime(auth.Authorization))
             {
                 throw new InvalidTokenException("Invalid Token");
             }

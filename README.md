@@ -52,8 +52,14 @@
  Description:  You can revoke the refresh token at anytime which will invalidate the accesstokens.   
  
  ## Extending   
- The User credentials has been kept relatively simple with no authorization built out of the box. The idea is to allow users of this Oauth service to integrate it easily with any existing authorization system or extend this to build the authorization out as required.   
  
+ Access token:  are genrated using the JWT standard by default. This can be swaped with other token specifications by implementing the ITokenService interface. See here https://wesleyhill.co.uk/p/alternatives-to-jwt-tokens/ for alternative formats to JWT. 
+ 
+ Authorization: is not implimented in this repo, to allow consumers of the code to integrate with other system or extend as required.   
+ 
+ Data persistance: This implimentation uses MSSQL to persist data by default. The data persistance technology can be switched to any alternative by implimenting the IDBService interface.
+ 
+ Encryption: This implimenattion uses SHA 1 and RNG crypto standards for hashing and encryption. These can be replaced by implimenting the IEncryptionService interface.
  
  ## Contributing
  Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
