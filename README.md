@@ -3,9 +3,8 @@
  
  ## OAuth Service  
  
- This is an open source OAuth Service written in .Net Core  
- The OAuth design uses JWT style tokens to impliment OAuth flows.  
- 
+ This is an open source light weight OAuth Service prototype code repository written in .Net Core. The aim of this project is to allow .Net developers and architects to use as a prototype for in house implementation of OAuth services. Contributions suggestions and ideas are all welcome please see contributions section to actively contribute.
+   
  ## Architecture
  
  This .Net core service is built on clean architecture principles.
@@ -17,12 +16,12 @@
  
  ## JWT token 
  
- You can use any other type of token by implimenting the ITokenService interface.  
+ You can use any other type of token by implementing the ITokenService interface.  
  
  ## Error handling 
  
  Invalid User Error indicates that the user credentials are invalid.   
- Invalid Token Errro inidcates that the token is invalid.  
+ Invalid Token Error indicates that the token is invalid.  
  
  ## Installation
  
@@ -34,9 +33,9 @@
  
  ### Login User  
  Usage : (POST) api/token  
- Description: Using this API with a username and password  in teh request you can get an access token and refresh token.  
- ** Access tokens are shortlived between 5 - 10 mins while refresh tokens are longlived 1 to 2 weeks. 
- ** The idea is you use the refresh token to retrive new access tokens periodically (E.g: every 15 mins).  
+ Description: Using this API with a username and password in the request you can get an access token and refresh token.  
+ ** Access tokens are short lived between 5 - 10 mins while refresh tokens are long lived 1 to 2 weeks. 
+ ** The idea is you use the refresh token to retrieve new access tokens periodically (E.g. every 15 mins).  
  
  ### Verify Token:   
  Usage : (POST) api/token/verify  
@@ -44,22 +43,22 @@
  
  ### Refresh Token   
  Usage : (POST) api/token/refresh   
- Description: Using this APi you can provide an existing refresh token and retrieve a new refresh token and access token.  
+ Description: Using this API you can provide an existing refresh token and retrieve a new refresh token and access token.  
  Only one Refresh Token is issued per user at any given time.   
   
  ### Revocation   
  Usage : (POST) api/token/revoke   
- Description:  You can revoke the refresh token at anytime which will invalidate the accesstokens.   
+ Description:  You can revoke the refresh token at any time which will invalidate the accesstokens.   
  
  ## Extending   
  
- Access token:  are genrated using the JWT standard by default. This can be swaped with other token specifications by implementing the ITokenService interface. See here https://wesleyhill.co.uk/p/alternatives-to-jwt-tokens/ for alternative formats to JWT. 
+ Access token:  are generated using the JWT standard by default. This can be swapped with other token specifications by implementing the ITokenService interface. See here https://wesleyhill.co.uk/p/alternatives-to-jwt-tokens/ for alternative formats to JWT. 
  
- Authorization: is not implimented in this repo, to allow consumers of the code to integrate with other system or extend as required.   
+ Authorization: is not implemented in this repo, to allow consumers of the code to integrate with other system or extend as required.   
  
- Data persistance: This implimentation uses MSSQL to persist data by default. The data persistance technology can be switched to any alternative by implimenting the IDBService interface.
+ Data persistence: This implementation uses MSSQL to persist data by default. The data persistence technology can be switched to any alternative by implementing the IDBService interface.
  
- Encryption: This implimenattion uses SHA 1 and RNG crypto standards for hashing and encryption. These can be replaced by implimenting the IEncryptionService interface.
+ Encryption: This implementation uses SHA 1 and RNG crypto standards for hashing and encryption. These can be replaced by implementing the IEncryptionService interface.
  
  ## Contributing
  Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
