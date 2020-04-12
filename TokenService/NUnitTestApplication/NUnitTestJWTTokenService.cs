@@ -21,7 +21,7 @@ namespace NUnitTestApplication
             jWTTokenService = new JWTTokenService(encryptSvc, configuration);
         }
 
-        [Test]
+        [Test]        
         public void TestVerifyToken()
         {
             Users use = new Users { UserName = "rramesh", Salt = "z1GRw9XD6tYT10qMqKf0cO7rPcsvkVllugZittGCL0Y=", HashPassword = "", UserId = Guid.NewGuid() };

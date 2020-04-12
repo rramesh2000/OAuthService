@@ -8,7 +8,7 @@ namespace Application.Common.Behaviours
 {
 
     /// <summary>
-    /// TODO: Does all of the encryptions. Would break thsi further down to single responsinility classes and rename to CustomEncryptionService.
+    /// TODO: Does all of the encryptions. Would break this further down to single responsinility classes and rename to CustomEncryptionService.
     /// </summary>
     public class EncryptionService : IEncryptionService
     {

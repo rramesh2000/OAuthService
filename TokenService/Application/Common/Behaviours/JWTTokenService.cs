@@ -20,7 +20,6 @@ namespace Application.Common.Behaviours
 
         public JWTTokenService(IEncryptionService encryptSvc, IConfiguration configuration)
         {
-
             EncryptSvc = encryptSvc;
             config = configuration;
             SecretKey = config["Secretkey"];
@@ -34,6 +33,7 @@ namespace Application.Common.Behaviours
                 alg = config.GetValue<string>("jwt:header:alg"),
                 typ = config.GetValue<string>("jwt:header:typ")
             };
+
             Payload payload = new Payload
             {
                 iss = config.GetValue<string>("jwt:payload:iss"),

@@ -1,3 +1,0 @@
-2020-04-09 23:33:19.608 +10:00 [ERR] An error occurred while updating the entries. See the inner exception for details.
-2020-04-09 23:35:09.995 +10:00 [ERR] An error occurred while updating the entries. See the inner exception for details.
-2020-04-09 23:38:00.596 +10:00 [ERR] Object reference not set to an instance of an object.

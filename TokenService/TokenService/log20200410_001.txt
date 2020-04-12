@@ -1,8 +1,0 @@
-2020-04-10 00:28:32.046 +10:00 [ERR] Cannot create User
-System.DuplicateWaitObjectException: Duplicate objects in argument.
-   at Application.Common.Behaviours.DBMSSQLService.SaveUser(User user) in D:\Work\Projects\OAuth\TokenService\Application\Common\Behaviours\DBMSSQLService.cs:line 72
-   at Application.Registration.RegistrationService.SaveUser(UserDTO userdto) in D:\Work\Projects\OAuth\TokenService\Application\Registration\RegistrationService.cs:line 51
-2020-04-10 00:28:33.274 +10:00 [ERR] Cannot create User
-System.DuplicateWaitObjectException: Duplicate objects in argument.
-   at Application.Common.Behaviours.DBMSSQLService.SaveUser(User user) in D:\Work\Projects\OAuth\TokenService\Application\Common\Behaviours\DBMSSQLService.cs:line 72
-   at Application.Registration.RegistrationService.SaveUser(UserDTO userdto) in D:\Work\Projects\OAuth\TokenService\Application\Registration\RegistrationService.cs:line 51

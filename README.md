@@ -1,29 +1,35 @@
 # OAuthService in .Net Core by Ritesh Ramesh
 
  
- ## OAuth Service  
+ ## About OAuth Service  
  
- This is an open source light weight OAuth Service prototype code repository written in .Net Core. The aim of this project is to allow .Net developers and architects to use as a prototype for in house implementation of OAuth services. Contributions suggestions and ideas are all welcome please see contributions section to actively contribute.
-   
+ OAuth Service is an open source OAuth 2.0 service prototype written in .Net Core v3. This is written and maintained by Ritesh Ramesh. The aim of this project is to allow .Net developers and architects to use as a prototype for in house implementations of OAuth services. Contributions suggestions and ideas are all welcome please see contributions section to actively contribute.
+
+ You can use this service to secure REST API resources, SOAP based webservice and web applications.   
+ 
  ## Architecture
  
  This .Net core service is built on clean architecture principles.
  
- ## Authentication and Validation
+ ### Authentication and Validation
  
  The validation and authentication uses the chain of responsibility pattern so you can add any number of handlers to extend the token validation process. 
  Currently it supports a signature validation handler and a revocation handler.
  
- ## JWT token 
+ ### JWT token 
  
  You can use any other type of token by implementing the ITokenService interface.  
  
- ## Error handling 
+ ### Error handling 
  
  Invalid User Error indicates that the user credentials are invalid.   
  Invalid Token Error indicates that the token is invalid.  
  
  ## Installation
+ 
+ Install the required .NET Core SDK  
+ Install Git  
+ Install Docker 
  
  ## Usage
  
