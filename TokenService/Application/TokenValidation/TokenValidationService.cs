@@ -12,25 +12,15 @@ namespace Application.TokenValidation
     public class TokenValidationService : BaseService
     {
         public ITokenService JWTTokenService { get; set; }
-        public IDBService DBService { get; set; }
-
         public IEncryptionService EncryptSvc { get; set; }
-
         public IConfiguration configuration { get; set; }
 
-        public TokenValidationService()
-        {
-        }
-
-        public TokenValidationService(IConfiguration configuration)
+        public TokenValidationService(ITSLogger log, IConfiguration configuration) : base(log)
         {
             EncryptSvc = new EncryptionService();
             this.configuration = configuration;
-            DBService = new DBMSSQLService();
-            JWTTokenService = new JWTTokenService(EncryptSvc, this.configuration);
+            JWTTokenService = new JWTTokenService(log, EncryptSvc, this.configuration);
         }
-
-     
 
         public string VerifyToken(AccessTokenDTO auth)
         {

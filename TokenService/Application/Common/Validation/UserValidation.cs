@@ -8,8 +8,8 @@ namespace Application.Common.Validation
     {
         public UserValidation()
         {
-            RuleFor(user => user.Username).NotEmpty().NotNull();
-            RuleFor(user => user.Password).NotEmpty().NotNull();
+            RuleFor(user => user.UserName).NotEmpty().NotNull();
+            //RuleFor(user => user.Password).NotEmpty().NotNull();
         }
     }
 }

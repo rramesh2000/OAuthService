@@ -1,5 +1,6 @@
 ﻿using Application.Common.Behaviours;
-using Infrastructure.Models;
+using Domain.Entities;
+using System;
 
 namespace Application.Common.Models
 {
@@ -7,17 +8,19 @@ namespace Application.Common.Models
     {
         public UserLoginDTO()
         {
-            this.username = username;
+            this.UserName = UserName;
             this.password = password;
-            this.users =  new Users();
+            this.users = new User();
             this.encryptionService = new EncryptionService();
         }
-
-        public string username { get; set; }
+        public Guid UserId { get; set; }
+        public string UserName { get; set; }
         public string password { get; set; }
+        public string Salt { get; set; }
+        public User users { get; set; }
 
-        public Users users { get; set; }
-
+        public string HashPassword { get; set; }
+        public string RefreshToken { get; set; }
         public EncryptionService encryptionService { get; set; }
     }
 }

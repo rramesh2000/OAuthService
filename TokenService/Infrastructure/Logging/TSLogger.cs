@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Application.Common.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
 
 namespace Infrastructure.Logging
 {
-    public class TSLogger
+    public class TSLogger : ITSLogger
     {
         public Logger Log { get; set; }
 

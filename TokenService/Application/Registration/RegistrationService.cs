@@ -11,19 +11,11 @@ namespace Application.Registration
 {
     public class RegistrationService : BaseService
     {
-        public RegistrationService() : base()
+        public RegistrationService(ITSLogger log) : base(log)
         {
-            EncryptSvc = new EncryptionService();
-            DBService = new DBMSSQLService();
         }
 
-        public RegistrationService(IEncryptionService encryptSvc)
-        {
-            DBService = new DBMSSQLService();
-            EncryptSvc = encryptSvc;
-        }
-
-        public IDBService DBService { get; set; }
+        public DBMSSQLService DBService { get; set; }
 
         public IEncryptionService EncryptSvc { get; set; }
 
@@ -47,7 +39,7 @@ namespace Application.Registration
                 {
                     user.UserId = Guid.NewGuid();
                     user.Salt = EncryptSvc.GetSalt();
-                    user.HashPassword = EncryptSvc.GenerateSaltedHashPassword(user.Salt, user.Password).Hash;
+                    user.HashPassword = EncryptSvc.GenerateSaltedHashPassword(user.Salt, userdto.Password).Hash;
                     user = mapper.Map<User>(DBService.SaveUser(user));
                     userdto = mapper.Map<UserDTO>(user);
                 }

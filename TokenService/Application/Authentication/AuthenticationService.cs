@@ -1,75 +1,69 @@
 ﻿using Application.Authentication.Handlers;
-using Application.Common.Behaviours;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Domain.Entities;
 using Domain.Enums;
 using FluentValidation.Results;
-using Infrastructure.Models;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Linq;
 
 namespace Application
 {
     public class AuthenticationService : BaseService, IAuthenticationService
     {
         public ITokenService JWTTokenService { get; set; }
-        public IDBService DBService { get; set; }
-
+        public ITokenServiceDbContext oauth { get; set; }
         public IEncryptionService EncryptSvc { get; set; }
         public string SecretKey { get; set; }
 
-        public AuthenticationService()
+
+        public AuthenticationService(IConfiguration configuration,ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) :base(log)
         {
+            this.config = configuration;
+            this.JWTTokenService = jWTTokenService;
+            this.oauth = oauth;
+            this.EncryptSvc = encryptSvc;
         }
 
-        public AuthenticationService(IConfiguration configuration)
-        {
-            config = configuration;
-            EncryptSvc = new EncryptionService();
-            DBService = new DBMSSQLService();
-            JWTTokenService = new JWTTokenService(EncryptSvc, configuration);
-        }
-
-        public AuthenticationDTO Authenticate(UserLoginDTO userLoginDTO)
+        public AuthenticationDTO AuthenticateUserLogin(UserLoginDTO userLogin)
         {
             AuthenticationDTO auth = new AuthenticationDTO();
             try
-            {
-                UserLogin userLogin = mapper.Map<UserLogin>(userLoginDTO);
+            {                
                 ValidationResult results = userloginvalidation.Validate(userLogin);
-                userLoginDTO.users = mapper.Map<Users>(DBService.GetUser(userLogin.username));
-                userLoginDTO.encryptionService = new EncryptionService();
-
+                User user = oauth.User.Where(x => x.UserName == userLogin .UserName).FirstOrDefault();
+                UserLoginDTO userLoginDTO = mapper.Map<UserLoginDTO>(user);
+                userLoginDTO.password = userLogin.password;
                 var handler = new UserAuthenticationHandler();
                 handler.Handle(userLoginDTO);
                 auth.token_type = config["TokenType"];
-                auth.access_token = JWTTokenService.GenerateAccessToken(userLoginDTO.users);
-                auth.refresh_token = GetRefreshToken(userLoginDTO.username);
+                auth.access_token = JWTTokenService.GenerateAccessToken(userLoginDTO);
+                auth.refresh_token = GetRefreshToken(userLoginDTO.UserName);
             }
             catch (Exception ex)
             {
-                Log.Log.Error(ex.Message, TokenConstants.InvalidUser);
+                Log.Log.Error(ex.Message + " " + ex.StackTrace, TokenConstants.InvalidUser);
                 throw new InvalidUserException(TokenConstants.InvalidUser);
             }
             return auth;
         }
 
-        public AuthenticationDTO RefreshToken(RefreshTokenDTO refauth)
+        public AuthenticationDTO AuthenticateRefreshToken(RefreshTokenDTO refauth)
         {
             AuthenticationDTO auth = new AuthenticationDTO();
             try
             {
-                //ValidationResult results = userloginvalidation.Validate(userLogin);
-                Users users = DBService.GetUserFromRefreshToken(refauth.Authorization);
+                User user = oauth.User.Where(x => x.RefreshToken == refauth.Authorization).FirstOrDefault();
+                UserLoginDTO userLoginDTO = mapper.Map<UserLoginDTO>(user);
                 auth.token_type = config["TokenType"];
-                auth.access_token = JWTTokenService.GenerateAccessToken(users);
-                auth.refresh_token = GetRefreshToken(users.UserName);
+                auth.access_token = JWTTokenService.GenerateAccessToken(userLoginDTO);
+                auth.refresh_token = GetRefreshToken(user.UserName);
             }
             catch (Exception ex)
             {
-                Log.Log.Error(ex.Message, TokenConstants.InvalidUser);
+                Log.Log.Error(ex.Message+" "+ex.StackTrace, TokenConstants.InvalidUser);
                 throw new InvalidUserException(TokenConstants.InvalidUser);
             }
             return auth;
@@ -78,7 +72,10 @@ namespace Application
         private string GetRefreshToken(string username)
         {
             string refresh_token = JWTTokenService.GenerateRefreshToken();
-            DBService.UpdateUserRefreshToken(username, refresh_token);
+            User user = oauth.User.SingleOrDefault(x => x.UserName == username);
+            user.RefreshToken = refresh_token;
+            //oauth.Update(user);
+            oauth.SaveChanges();
             return refresh_token;
         }
 

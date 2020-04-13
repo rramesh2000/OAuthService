@@ -1,7 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Domain.Entities
 {
@@ -11,18 +8,14 @@ namespace Domain.Entities
         {
         }
 
-        public User(Guid userId, string username, string password)
+        public User(Guid userId, string username)
         {
             UserId = userId;
-            Username = username;
-            Password = password;
+            UserName = username;
         }
 
         public Guid UserId { get; set; }
-
-        public string Username { get; set; }
-
-        public string Password { get; set; }
+        public string UserName { get; set; }
         public string Salt { get; set; }
         public string HashPassword { get; set; }
         public string RefreshToken { get; set; }

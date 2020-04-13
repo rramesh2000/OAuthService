@@ -1,7 +1,8 @@
 ﻿using Application.Common.Behaviours.JWT;
 using Application.Common.Interfaces;
+using Application.Common.Models;
+using Domain.Entities;
 using Domain.ValueObjects;
-using Infrastructure.Models;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Security.Cryptography;
@@ -18,14 +19,14 @@ namespace Application.Common.Behaviours
 
         public IConfiguration Configuration { get; set; }
 
-        public JWTTokenService(IEncryptionService encryptSvc, IConfiguration configuration)
+        public JWTTokenService(ITSLogger log, IEncryptionService encryptSvc, IConfiguration configuration):base(log)
         {
             EncryptSvc = encryptSvc;
             config = configuration;
             SecretKey = config["Secretkey"];
         }
 
-        public string GenerateAccessToken(Users users)
+        public string GenerateAccessToken(UserLoginDTO user)
         {
             int tokenExpiery = Int32.Parse(config["AccessTokenLife"]);
             Header header = new Header
@@ -37,12 +38,12 @@ namespace Application.Common.Behaviours
             Payload payload = new Payload
             {
                 iss = config.GetValue<string>("jwt:payload:iss"),
-                sub = users.UserName,
+                sub = user.UserName,
                 exp = new TimeSpan(0, 0, tokenExpiery, 0, 0).TotalSeconds.ToString(),
                 iat = DateTime.Now.ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'"),
                 nbf = DateTime.Now.AddMinutes(tokenExpiery).ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'"),
                 jti = Guid.NewGuid().ToString(),
-                username = users.UserName,
+                username = user.UserName,
                 admin = true
             };
 
@@ -100,5 +101,7 @@ namespace Application.Common.Behaviours
             string value = EncryptSvc.Encrypt(headerStr.Base64Encode() + "." + payloadStr.Base64Encode(), SecretKey);
             return value;
         }
+
+     
     }
 }

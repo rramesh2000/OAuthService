@@ -2,22 +2,29 @@
 using Application.Common.Models;
 using Application.Registration;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using TokenService.Utility;
 
 namespace TokenService.Controllers
 {
-    [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
-    public class RegisterController : ControllerBase
+    public class RegisterController : BaseController
     {
+        public RegisterController(IConfiguration configuration) : base(configuration)
+        {
+        }
+
+
         // POST: api/Token
         [HttpPost]
+        [Route("/api/register")]
         public IActionResult Post(UserDTO user)
         {
             try
             {
-                RegistrationService registrationService = new RegistrationService();
+                RegistrationService registrationService = new RegistrationService(itsLogger);
                 user = registrationService.SaveUser(user);
             }
             catch (InvalidUserException exUser)

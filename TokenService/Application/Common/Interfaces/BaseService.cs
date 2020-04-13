@@ -1,11 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.DependencyInjection;
-using Infrastructure.Logging;
-using Domain;
+﻿using Application.Common.Mapper;
 using Application.Common.Validation;
-using Application.Common.Mapper;
-using Domain.Common;
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Common.Interfaces
 {
@@ -15,14 +12,14 @@ namespace Application.Common.Interfaces
         public IConfiguration config { get; set; }
         public IServiceCollection services { get; set; }
         public IMapper mapper { get; set; }
-        public TSLogger Log { get; set; }
+        public ITSLogger Log { get; set; }
 
         public UserLoginValidation userloginvalidation { get; set; }
 
         public UserValidation uservalidation { get; set; }
 
-       
-        public BaseService()
+
+        public BaseService(ITSLogger log)
         {
             var config = new MapperConfiguration(cfg =>
             {
@@ -31,14 +28,14 @@ namespace Application.Common.Interfaces
 
             mapper = config.CreateMapper();
 
-            Log = new TSLogger();
-         
+            Log = log;
+
 
             userloginvalidation = new UserLoginValidation();
 
             uservalidation = new UserValidation();
-                       
-          
+
+
         }
     }
 }

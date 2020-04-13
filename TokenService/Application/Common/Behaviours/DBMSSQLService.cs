@@ -1,32 +1,27 @@
 ﻿using Application.Common.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using Infrastructure.Models;
 using System;
 using System.Linq;
 
 namespace Application.Common.Behaviours
 {
-    public class DBMSSQLService : BaseService, IDBService
+    public class DBMSSQLService : BaseService  
     {
-        public OAuthContext oauth { get; set; }
+        public ITokenServiceDbContext oauth { get; set; }
         private readonly IMapper _mapper;
-        public DBMSSQLService(IMapper mapper)
+
+        public DBMSSQLService(ITSLogger log, ITokenServiceDbContext oauth, IMapper mapper): base(log)
         {
-            oauth = new OAuthContext();
+            this.oauth = oauth;
             _mapper = mapper;
         }
 
-        public DBMSSQLService() : base()
+        public User GetUser(string username)
         {
-            oauth = new OAuthContext();
-        }
-
-        public Users GetUser(string username)
-        {
-            if (!String.IsNullOrEmpty(username))
+            if (!string.IsNullOrEmpty(username))
             {
-                Users user = oauth.Users.Where(x => x.UserName == username).FirstOrDefault();
+                User user = oauth.User.Where(x => x.UserName == username).FirstOrDefault();
                 if (username == user.UserName)
                 {
                     return user;
@@ -37,30 +32,30 @@ namespace Application.Common.Behaviours
 
         public void UpdateUserRefreshToken(string username, string refresh_token)
         {
-            Users user = oauth.Users.Where(x => x.UserName == username).FirstOrDefault();
+            User user = oauth.User.Where(x => x.UserName == username).FirstOrDefault();
             user.RefreshToken = refresh_token;
-            oauth.Update(user);
-            oauth.SaveChanges();
+           // oauth.Update(user);
+           // oauth.SaveChanges();
         }
-        public Users GetUserFromRefreshToken(string refreshtoken)
+        public User GetUserFromRefreshToken(string refreshtoken)
         {
-            if (!String.IsNullOrEmpty(refreshtoken))
+            if (!string.IsNullOrEmpty(refreshtoken))
             {
-                Users user = oauth.Users.Where(x => x.RefreshToken == refreshtoken).FirstOrDefault();
+                User user = oauth.User.Where(x => x.RefreshToken == refreshtoken).FirstOrDefault();
                 return user;
             }
             return null;
         }
 
-        public Users SaveUser(User user)
+        public User SaveUser(User user)
         {
-            Users u = mapper.Map<Users>(user);
+            User u = mapper.Map<User>(user);
             try
             {
-                if (oauth.Users.Where(x => x.UserName == user.Username).Count() < 1)
+                if (oauth.User.Where(x => x.UserName == user.UserName).Count() < 1)
                 {
-                    oauth.Users.Add(u);
-                    oauth.SaveChanges();
+                    oauth.User.Add(u);
+                 //   oauth.SaveChanges();
                 }
                 else
                 {
