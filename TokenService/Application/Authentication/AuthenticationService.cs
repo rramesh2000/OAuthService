@@ -35,7 +35,7 @@ namespace Application
             }
             catch (Exception ex)
             {
-                Log.Log.Error(ex.Message + " " + ex.StackTrace, TokenConstants.InvalidUser);
+                Log.Log.Error(ex, TokenConstants.InvalidUser);
                 throw new InvalidUserException(TokenConstants.InvalidUser);
             }
             return auth;
@@ -54,7 +54,7 @@ namespace Application
             }
             catch (Exception ex)
             {
-                Log.Log.Error(ex.Message + " " + ex.StackTrace, TokenConstants.InvalidUser);
+                Log.Log.Error(ex, TokenConstants.InvalidUser);
                 throw new InvalidUserException(TokenConstants.InvalidUser);
             }
             return auth;

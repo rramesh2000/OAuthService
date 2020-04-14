@@ -21,10 +21,9 @@ namespace Application.Registration
         {
             try
             {
-                User user = mapper.Map<User>(userdto);
-                ValidationResult results = uservalidation.Validate(user);
+                ValidationResult results = uservalidation.Validate(userdto);  
                 if (!results.IsValid)
-                {
+                {                    
                     string failures = String.Empty;
                     //TODO: Use projection and remove the for loop 
                     foreach (var failure in results.Errors)
@@ -35,6 +34,7 @@ namespace Application.Registration
                 }
                 else
                 {
+                    User user = mapper.Map<User>(userdto);
                     user.UserId = Guid.NewGuid();
                     user.Salt = EncryptSvc.GetSalt();
                     user.HashPassword = EncryptSvc.GenerateSaltedHashPassword(user.Salt, userdto.password).Hash;

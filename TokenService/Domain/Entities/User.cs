@@ -19,5 +19,6 @@ namespace Domain.Entities
         public string Salt { get; set; }
         public string HashPassword { get; set; }
         public string RefreshToken { get; set; }
+ 
     }
 }
