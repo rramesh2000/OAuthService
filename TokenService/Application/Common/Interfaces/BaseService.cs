@@ -8,13 +8,12 @@ namespace Application.Common.Interfaces
 {
     public abstract class BaseService
     {
-
         public IConfiguration config { get; set; }
         public IServiceCollection services { get; set; }
         public IMapper mapper { get; set; }
         public ITSLogger Log { get; set; }
-
         public UserLoginValidation userloginvalidation { get; set; }
+        public RefreshTokenValidation refreshvalidation { get; set; }
         public ITokenService JWTTokenService { get; set; }
         public IEncryptionService EncryptSvc { get; set; }
         public UserValidation uservalidation { get; set; }
@@ -30,6 +29,7 @@ namespace Application.Common.Interfaces
             mapper = config.CreateMapper();
             Log = log;
             userloginvalidation = new UserLoginValidation();
+            refreshvalidation = new RefreshTokenValidation();
             uservalidation = new UserValidation();
             this.config = configuration;
             this.JWTTokenService = jWTTokenService;

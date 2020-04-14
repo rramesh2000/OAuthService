@@ -46,6 +46,7 @@ namespace Application
             AuthenticationDTO auth = new AuthenticationDTO();
             try
             {
+                ValidationResult results = refreshvalidation.Validate(refauth);
                 User user = oauth.User.Where(x => x.RefreshToken == refauth.Authorization).FirstOrDefault();
                 UserDTO userLoginDTO = mapper.Map<UserDTO>(user);
                 auth.token_type = config["TokenType"];

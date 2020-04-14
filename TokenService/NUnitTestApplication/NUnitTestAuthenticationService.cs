@@ -57,5 +57,43 @@ namespace NUnitTestApplication
             TokenValidationService tv = new TokenValidationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
             Assert.AreEqual(TokenConstants.ValidToken, tv.VerifyToken(accessDTO));
         }
+
+        [Test]
+        public void TestAuthenticateRefreshTokenCreatesNewAccessToken()
+        {
+            ITSLogger log = new TSLogger();
+            UserDTO userLogin = new UserDTO { UserName = "ronald", password = "test26832549658" };
+            AccessTokenDTO accessDTO = new AccessTokenDTO();
+            RefreshTokenDTO refreshTokenDTO = new RefreshTokenDTO();
+            AuthenticationDTO authenticationDTO = new AuthenticationDTO();
+            AuthenticationService authenticationService = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+            authenticationDTO = authenticationService.AuthenticateUserLogin(userLogin);
+            refreshTokenDTO.Authorization = authenticationDTO.refresh_token;
+            authenticationDTO = authenticationService.AuthenticateRefreshToken(refreshTokenDTO);
+            string accessToken1 = authenticationDTO.access_token;
+            refreshTokenDTO.Authorization = authenticationDTO.refresh_token;
+            authenticationDTO = authenticationService.AuthenticateRefreshToken(refreshTokenDTO);
+            string accessToken2 = authenticationDTO.access_token;
+            Assert.AreNotEqual(accessToken1, accessToken2);
+        }
+
+        [Test]
+        public void TestAuthenticateRefreshTokenCreatesNewRefreshToken()
+        {
+            ITSLogger log = new TSLogger();
+            UserDTO userLogin = new UserDTO { UserName = "ronald", password = "test26832549658" };
+            AccessTokenDTO accessDTO = new AccessTokenDTO();
+            RefreshTokenDTO refreshTokenDTO = new RefreshTokenDTO();
+            AuthenticationDTO authenticationDTO = new AuthenticationDTO();
+            AuthenticationService authenticationService = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+            authenticationDTO = authenticationService.AuthenticateUserLogin(userLogin);
+            refreshTokenDTO.Authorization = authenticationDTO.refresh_token;
+            authenticationDTO = authenticationService.AuthenticateRefreshToken(refreshTokenDTO);
+            string refreshToken1 = authenticationDTO.refresh_token;
+            refreshTokenDTO.Authorization = authenticationDTO.refresh_token;
+            authenticationDTO = authenticationService.AuthenticateRefreshToken(refreshTokenDTO);
+            string refreshToken2 = authenticationDTO.refresh_token;
+            Assert.AreNotEqual(refreshToken1, refreshToken2);
+        }
     }
 }

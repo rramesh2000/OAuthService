@@ -1,5 +1,4 @@
 ﻿using Application;
-using Application.Common.Behaviours;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
@@ -15,7 +14,7 @@ namespace TokenService.Controllers
     [ApiController]
     public class TokenController : BaseController
     {
-        public TokenController(IConfiguration configuration ) : base(configuration)
+        public TokenController(IConfiguration configuration) : base(configuration)
         {
         }
 
@@ -26,7 +25,12 @@ namespace TokenService.Controllers
             AuthenticationDTO Authorization = new AuthenticationDTO();
             try
             {
-                IAuthenticationService tm = new AuthenticationService(configuration, itsLogger, JWTTokenService, OAuthDbContext,EncryptionService);
+                IAuthenticationService tm = new AuthenticationService(
+                    configuration,
+                    itsLogger,
+                    JWTTokenService,
+                    OAuthDbContext,
+                    EncryptionService);
                 Authorization = tm.AuthenticateUserLogin(user);
             }
             catch (InvalidUserException exUser)
@@ -45,10 +49,15 @@ namespace TokenService.Controllers
         [ActionName("verify")]
         public IActionResult Post(AccessTokenDTO auth)
         {
-            string tmp = String.Empty;
+            string tmp = string.Empty;
             try
             {
-                TokenValidationService tm = new TokenValidationService(configuration, itsLogger, JWTTokenService, OAuthDbContext, EncryptionService);
+                TokenValidationService tm = new TokenValidationService(
+                    configuration,
+                    itsLogger,
+                    JWTTokenService,
+                    OAuthDbContext,
+                    EncryptionService);
                 tmp = tm.VerifyToken(auth);
             }
             catch (InvalidTokenException exToken)
@@ -70,7 +79,12 @@ namespace TokenService.Controllers
             AuthenticationDTO Authorization = new AuthenticationDTO();
             try
             {
-                IAuthenticationService tm = new AuthenticationService(configuration,itsLogger, JWTTokenService, OAuthDbContext, EncryptionService);
+                IAuthenticationService tm = new AuthenticationService(
+                    configuration,
+                    itsLogger,
+                    JWTTokenService,
+                    OAuthDbContext,
+                    EncryptionService);
                 Authorization = tm.AuthenticateRefreshToken(auth);
             }
             catch (InvalidUserException exUser)
