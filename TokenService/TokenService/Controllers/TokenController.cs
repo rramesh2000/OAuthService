@@ -21,7 +21,7 @@ namespace TokenService.Controllers
 
         [HttpPost]
         [Route("/api/token")]
-        public IActionResult Post(UserLoginDTO user)
+        public IActionResult Post(UserDTO user)
         {
             AuthenticationDTO Authorization = new AuthenticationDTO();
             try
@@ -48,7 +48,7 @@ namespace TokenService.Controllers
             string tmp = String.Empty;
             try
             {
-                TokenValidationService tm = new TokenValidationService(itsLogger, configuration);
+                TokenValidationService tm = new TokenValidationService(configuration, itsLogger, JWTTokenService, OAuthDbContext, EncryptionService);
                 tmp = tm.VerifyToken(auth);
             }
             catch (InvalidTokenException exToken)

@@ -1,7 +1,6 @@
 ﻿using Application.Common.Behaviours.JWT;
 using Application.Common.Interfaces;
 using Application.Common.Models;
-using Domain.Entities;
 using Domain.ValueObjects;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -11,24 +10,22 @@ using System.Text.Json;
 namespace Application.Common.Behaviours
 {
     //TODO: Refactor this using Facade pattern 
-    public class JWTTokenService : BaseService, ITokenService
+    public class JWTTokenService : ITokenService
     {
-        public IEncryptionService EncryptSvc { get; set; }
-
         public string SecretKey { get; set; }
+        public IEncryptionService EncryptSvc { get; set; }
+        public IConfiguration config { get; set; }
 
-        public IConfiguration Configuration { get; set; }
-
-        public JWTTokenService(ITSLogger log, IEncryptionService encryptSvc, IConfiguration configuration):base(log)
+        public JWTTokenService(ITSLogger log, IEncryptionService encryptSvc, IConfiguration configuration)
         {
             EncryptSvc = encryptSvc;
             config = configuration;
             SecretKey = config["Secretkey"];
         }
 
-        public string GenerateAccessToken(UserLoginDTO user)
+        public string GenerateAccessToken(UserDTO user)
         {
-            int tokenExpiery = Int32.Parse(config["AccessTokenLife"]);
+            int tokenExpiery = int.Parse(config["AccessTokenLife"]);
             Header header = new Header
             {
                 alg = config.GetValue<string>("jwt:header:alg"),
@@ -47,9 +44,11 @@ namespace Application.Common.Behaviours
                 admin = true
             };
 
-            JWTToken token = new JWTToken();
-            token._header = header;
-            token._payload = payload;
+            JWTToken token = new JWTToken
+            {
+                _header = header,
+                _payload = payload
+            };
 
             string headerStr = JsonSerializer.Serialize(header);
             string payloadStr = JsonSerializer.Serialize(payload);
@@ -67,7 +66,6 @@ namespace Application.Common.Behaviours
                 return Convert.ToBase64String(randomNumber);
             }
         }
-
         public bool VerifyAccessToken(string token)
         {
             bool tmpBool = false;
@@ -102,6 +100,5 @@ namespace Application.Common.Behaviours
             return value;
         }
 
-     
     }
 }

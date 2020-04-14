@@ -28,14 +28,14 @@ namespace NUnitTestApplication
         [Test]        
         public void TestVerifyToken()
         {
-            UserLoginDTO use = new UserLoginDTO { UserName = "rramesh", Salt = "z1GRw9XD6tYT10qMqKf0cO7rPcsvkVllugZittGCL0Y=", HashPassword = "", UserId = Guid.NewGuid() };
+            UserDTO use = new UserDTO { UserName = "rramesh", Salt = "z1GRw9XD6tYT10qMqKf0cO7rPcsvkVllugZittGCL0Y=", HashPassword = "", UserId = Guid.NewGuid() };
             Assert.IsTrue(jWTTokenService.VerifyAccessToken(jWTTokenService.GenerateAccessToken(use)));
         }
 
         [Test]
         public void TestVerifyTokenTime()
         {
-            UserLoginDTO use = new UserLoginDTO { UserName = "rramesh", Salt = "z1GRw9XD6tYT10qMqKf0cO7rPcsvkVllugZittGCL0Y=", HashPassword = "", UserId = Guid.NewGuid() };
+            UserDTO use = new UserDTO { UserName = "rramesh", Salt = "z1GRw9XD6tYT10qMqKf0cO7rPcsvkVllugZittGCL0Y=", HashPassword = "", UserId = Guid.NewGuid() };
             Assert.IsTrue(jWTTokenService.VerifyAccessTokenTime(jWTTokenService.GenerateAccessToken(use)));
         }
 

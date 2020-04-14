@@ -1,30 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Common.Models
 {
-     
     public class UserDTO
-
     {
         public UserDTO()
         {
+            this.UserName = UserName;
+            this.password = password;
         }
-
-        public UserDTO(Guid userId, string username, string password)
-        {
-            UserId = userId;
-            Username = username;
-            Password = password;
-        }
-
         public Guid UserId { get; set; }
-
-        public string Username { get; set; }
-
-        public string Password { get; set; }
+        public string UserName { get; set; }
+        public string password { get; set; }
         public string Salt { get; set; }
         public string HashPassword { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

@@ -11,22 +11,15 @@ namespace Application.TokenValidation
 {
     public class TokenValidationService : BaseService
     {
-        public ITokenService JWTTokenService { get; set; }
-        public IEncryptionService EncryptSvc { get; set; }
-        public IConfiguration configuration { get; set; }
-
-        public TokenValidationService(ITSLogger log, IConfiguration configuration) : base(log)
+        public TokenValidationService(IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(configuration, log, jWTTokenService, oauth, encryptSvc)
         {
-            EncryptSvc = new EncryptionService();
-            this.configuration = configuration;
-            JWTTokenService = new JWTTokenService(log, EncryptSvc, this.configuration);
         }
 
         public string VerifyToken(AccessTokenDTO auth)
         {
             try
             {
-                string SecretKey = configuration["Secretkey"];
+                string SecretKey = config["Secretkey"];
                 AuthorizationDTO authorizationVm = new AuthorizationDTO(auth.Authorization, false, SecretKey, JWTTokenService);
                 var handler = new TokenVerificationHandler();
                 handler.SetNext(new TokenTimeVerificationHandler()).SetNext(new TokenRevocationHandler());

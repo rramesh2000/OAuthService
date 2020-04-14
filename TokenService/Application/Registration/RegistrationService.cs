@@ -5,19 +5,17 @@ using Application.Common.Models;
 using Domain.Entities;
 using Domain.Enums;
 using FluentValidation.Results;
+using Microsoft.Extensions.Configuration;
 using System;
+using System.Linq;
 
 namespace Application.Registration
 {
     public class RegistrationService : BaseService
     {
-        public RegistrationService(ITSLogger log) : base(log)
+        public RegistrationService(IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(configuration, log, jWTTokenService, oauth, encryptSvc)
         {
         }
-
-        public DBMSSQLService DBService { get; set; }
-
-        public IEncryptionService EncryptSvc { get; set; }
 
         public UserDTO SaveUser(UserDTO userdto)
         {
@@ -39,8 +37,16 @@ namespace Application.Registration
                 {
                     user.UserId = Guid.NewGuid();
                     user.Salt = EncryptSvc.GetSalt();
-                    user.HashPassword = EncryptSvc.GenerateSaltedHashPassword(user.Salt, userdto.Password).Hash;
-                    user = mapper.Map<User>(DBService.SaveUser(user));
+                    user.HashPassword = EncryptSvc.GenerateSaltedHashPassword(user.Salt, userdto.password).Hash;
+                    if (oauth.User.Where(x => x.UserName == user.UserName).Count() < 1)
+                    {
+                        oauth.User.Add(user);
+                        oauth.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new DuplicateWaitObjectException();
+                    }
                     userdto = mapper.Map<UserDTO>(user);
                 }
             }
@@ -55,6 +61,5 @@ namespace Application.Registration
             }
             return userdto;
         }
-
     }
 }

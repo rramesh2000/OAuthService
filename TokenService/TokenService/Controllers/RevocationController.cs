@@ -18,7 +18,7 @@ namespace TokenService.Controllers
         // POST: api/Token
         [HttpPost]
         [Route("api/revoke")]
-        public IActionResult Post(UserLoginDTO user)
+        public IActionResult Post(UserDTO user)
         {
             try
             {

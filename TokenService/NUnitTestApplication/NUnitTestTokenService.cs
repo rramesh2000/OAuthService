@@ -36,10 +36,10 @@ namespace NUnitTestApplication
         {
             ITSLogger log = new TSLogger();
             AccessTokenDTO accessDTO = new AccessTokenDTO();
-            UserLoginDTO userLoginDTO = new UserLoginDTO {  UserName = "ronald", password = "test26832549658" };
+            UserDTO userLoginDTO = new UserDTO {  UserName = "ronald", password = "test26832549658" };
             IAuthenticationService tm = new AuthenticationService(configuration,log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
             accessDTO.Authorization = tm.AuthenticateUserLogin(userLoginDTO).access_token;
-            TokenValidationService tv = new TokenValidationService(log, configuration);
+            TokenValidationService tv = new TokenValidationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
             string result = tv.VerifyToken(accessDTO);
             Assert.AreEqual(result, TokenConstants.ValidToken);
         }

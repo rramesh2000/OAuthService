@@ -16,7 +16,6 @@ namespace TokenService.Controllers
         {
         }
 
-
         // POST: api/Token
         [HttpPost]
         [Route("/api/register")]
@@ -24,7 +23,7 @@ namespace TokenService.Controllers
         {
             try
             {
-                RegistrationService registrationService = new RegistrationService(itsLogger);
+                RegistrationService registrationService = new RegistrationService(configuration, itsLogger, JWTTokenService, OAuthDbContext, EncryptionService);
                 user = registrationService.SaveUser(user);
             }
             catch (InvalidUserException exUser)

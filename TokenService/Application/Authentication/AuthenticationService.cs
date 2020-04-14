@@ -13,28 +13,19 @@ namespace Application
 {
     public class AuthenticationService : BaseService, IAuthenticationService
     {
-        public ITokenService JWTTokenService { get; set; }
-        public ITokenServiceDbContext oauth { get; set; }
-        public IEncryptionService EncryptSvc { get; set; }
         public string SecretKey { get; set; }
-
-
-        public AuthenticationService(IConfiguration configuration,ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) :base(log)
+        public AuthenticationService(IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(configuration, log, jWTTokenService, oauth, encryptSvc)
         {
-            this.config = configuration;
-            this.JWTTokenService = jWTTokenService;
-            this.oauth = oauth;
-            this.EncryptSvc = encryptSvc;
         }
 
-        public AuthenticationDTO AuthenticateUserLogin(UserLoginDTO userLogin)
+        public AuthenticationDTO AuthenticateUserLogin(UserDTO userLogin)
         {
             AuthenticationDTO auth = new AuthenticationDTO();
             try
-            {                
+            {
                 ValidationResult results = userloginvalidation.Validate(userLogin);
-                User user = oauth.User.Where(x => x.UserName == userLogin .UserName).FirstOrDefault();
-                UserLoginDTO userLoginDTO = mapper.Map<UserLoginDTO>(user);
+                User user = oauth.User.Where(x => x.UserName == userLogin.UserName).FirstOrDefault();
+                UserDTO userLoginDTO = mapper.Map<UserDTO>(user);
                 userLoginDTO.password = userLogin.password;
                 var handler = new UserAuthenticationHandler();
                 handler.Handle(userLoginDTO);
@@ -56,14 +47,14 @@ namespace Application
             try
             {
                 User user = oauth.User.Where(x => x.RefreshToken == refauth.Authorization).FirstOrDefault();
-                UserLoginDTO userLoginDTO = mapper.Map<UserLoginDTO>(user);
+                UserDTO userLoginDTO = mapper.Map<UserDTO>(user);
                 auth.token_type = config["TokenType"];
                 auth.access_token = JWTTokenService.GenerateAccessToken(userLoginDTO);
                 auth.refresh_token = GetRefreshToken(user.UserName);
             }
             catch (Exception ex)
             {
-                Log.Log.Error(ex.Message+" "+ex.StackTrace, TokenConstants.InvalidUser);
+                Log.Log.Error(ex.Message + " " + ex.StackTrace, TokenConstants.InvalidUser);
                 throw new InvalidUserException(TokenConstants.InvalidUser);
             }
             return auth;

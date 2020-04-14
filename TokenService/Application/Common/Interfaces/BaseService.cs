@@ -15,11 +15,12 @@ namespace Application.Common.Interfaces
         public ITSLogger Log { get; set; }
 
         public UserLoginValidation userloginvalidation { get; set; }
-
+        public ITokenService JWTTokenService { get; set; }
+        public IEncryptionService EncryptSvc { get; set; }
         public UserValidation uservalidation { get; set; }
+        public ITokenServiceDbContext oauth { get; set; }
 
-
-        public BaseService(ITSLogger log)
+        public BaseService(IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc)
         {
             var config = new MapperConfiguration(cfg =>
             {
@@ -27,15 +28,13 @@ namespace Application.Common.Interfaces
             });
 
             mapper = config.CreateMapper();
-
             Log = log;
-
-
             userloginvalidation = new UserLoginValidation();
-
             uservalidation = new UserValidation();
-
-
+            this.config = configuration;
+            this.JWTTokenService = jWTTokenService;
+            this.oauth = oauth;
+            this.EncryptSvc = encryptSvc;
         }
     }
 }
