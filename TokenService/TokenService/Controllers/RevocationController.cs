@@ -1,4 +1,6 @@
-﻿using Application.Common.Exceptions;
+﻿using Application.Authentication;
+using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using Application.Common.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -18,11 +20,22 @@ namespace TokenService.Controllers
         // POST: api/Token
         [HttpPost]
         [Route("api/revoke")]
-        public IActionResult Post(UserDTO user)
+        public IActionResult Post(RevocationDTO revoke)
         {
+            string tmp = string.Empty;
             try
             {
-
+                IRevocationService rs = new RevocationService(
+                    configuration,
+                    itsLogger,
+                    JWTTokenService,
+                    OAuthDbContext,
+                    EncryptionService);
+               tmp =   rs.TokenRevocation(revoke);
+            }
+            catch (InvalidTokenException exToken)
+            {
+                return Unauthorized(new UnauthorizedError(exToken.Message));
             }
             catch (InvalidUserException exUser)
             {
@@ -32,7 +45,7 @@ namespace TokenService.Controllers
             {
                 return Unauthorized(new UnauthorizedError(ex.Message));
             }
-            return Ok( );
+            return Ok(tmp);
         }
 
     }

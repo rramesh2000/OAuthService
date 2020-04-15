@@ -1,5 +1,11 @@
 ﻿using Application.Common.Interfaces;
+using Domain.Enums;
 using Domain.ValueObjects;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.Pkcs;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -15,13 +21,59 @@ namespace Application.Common.Behaviours
         public EncryptionService()
         {
         }
-
-        public string Encrypt(string data, string secretKey)
+        
+        public string ComputeHmac(string data, string secretKey, ALG alg)
         {
-            HMACSHA256 hashObject = new HMACSHA256(Encoding.UTF8.GetBytes(secretKey));
-            var signature = hashObject.ComputeHash(Encoding.UTF8.GetBytes(data));
-            var encodedSignature = Convert.ToBase64String(signature);
-            return encodedSignature;
+            byte[] bdata = Encoding.UTF8.GetBytes(data);
+            byte[] bkey = Encoding.UTF8.GetBytes(secretKey);
+
+            switch (alg)
+            {
+                case ALG. HS256:
+                    return Convert.ToBase64String(ComputeHmacsha256(bdata, bkey));
+                case ALG.HS512:
+                    return Convert.ToBase64String(ComputeHmacsha512(bdata, bkey));
+                case ALG.HS384:
+                    return Convert.ToBase64String(ComputeHmacsha384(bdata, bkey));
+                case ALG.RS256:
+                    return Convert.ToBase64String(ComputeRS256(bdata, bkey));           
+                default:
+                    return Convert.ToBase64String(ComputeHmacsha256(bdata, bkey));
+            }
+        }
+
+        public static byte[] ComputeHmacsha256(byte[] toBeHashed, byte[] key)
+        {
+            using (var hmac = new HMACSHA256(key))
+            {
+                return hmac.ComputeHash(toBeHashed);
+            }
+        }
+
+        public static byte[] ComputeHmacsha384(byte[] toBeHashed, byte[] key)
+        {
+            using (var hmac = new HMACSHA384(key))
+            {
+                return hmac.ComputeHash(toBeHashed);
+            }
+        }
+
+        public static byte[] ComputeHmacsha512(byte[] toBeHashed, byte[] key)
+        {
+            using (var hmac = new HMACSHA512(key))
+            {
+                return hmac.ComputeHash(toBeHashed);
+            }
+        }
+
+        public static byte[] ComputeRS256(byte[] toBeHashed, byte[] key)
+        {
+            var privKeyObj = Asn1Object.FromByteArray(key);
+            var privStruct = RsaPrivateKeyStructure.GetInstance((Asn1Sequence)privKeyObj);
+            ISigner sig = SignerUtilities.GetSigner("SHA256withRSA");
+            sig.Init(true, new RsaKeyParameters(true, privStruct.Modulus, privStruct.PrivateExponent));
+            sig.BlockUpdate(toBeHashed, 0, toBeHashed.Length);
+            return sig.GenerateSignature();
         }
 
         public HashSalt GenerateSaltedHashPassword(string salt, string password)

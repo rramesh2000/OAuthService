@@ -11,6 +11,10 @@
  
  This .Net core service is built on clean architecture principles.
  
+ ## Specifications 
+ 
+ JWT token supports the following algorithms HS256, HS384, HS512, RS256
+ 
  ### Authentication and Validation
  
  The validation and authentication uses the chain of responsibility pattern so you can add any number of handlers to extend the token validation process. 
@@ -33,29 +37,34 @@
  
  ## Usage
  
+ All API's are exposed via a Swagger documentation tool at this endpoint {host}/swagger/index.html.  
+ Also in the source code is a test folder that contains Postman environment and collection files that you can use with Postman.
+ 
  ### Register User   
- Usage: (POST) api/register    
+ Usage: (POST) {host}/api/register    
  Description: Using this API you can register new users. This API accepts a username and password then returns a full User.  
  
  ### Login User  
- Usage : (POST) api/token  
+ Usage : (POST) {host}/api/token  
  Description: Using this API with a username and password in the request you can get an access token and refresh token.  
  ** Access tokens are short lived between 5 - 10 mins while refresh tokens are long lived 1 to 2 weeks. 
  ** The idea is you use the refresh token to retrieve new access tokens periodically (E.g. every 15 mins).  
  
  ### Verify Token:   
- Usage : (POST) api/token/verify  
+ Usage : (POST) {host}/api/token/verify  
  Description: Using this API you can verify if a token is still valid.  
  
  ### Refresh Token   
- Usage : (POST) api/token/refresh   
+ Usage : (POST) {host}/api/token/refresh   
  Description: Using this API you can provide an existing refresh token and retrieve a new refresh token and access token.  
  Only one Refresh Token is issued per user at any given time.   
   
  ### Revocation   
- Usage : (POST) api/token/revoke   
+ Usage : (POST) {host}/api/revoke 
  Description:  You can revoke the refresh token at any time which will invalidate the accesstokens.   
- 
+  
+ ###  This is also available as a docker container https://registry.hub.docker.com/rramesh1000
+  
  ## Extending   
  
  Access token:  are generated using the JWT standard by default. This can be swapped with other token specifications by implementing the ITokenService interface. See here https://wesleyhill.co.uk/p/alternatives-to-jwt-tokens/ for alternative formats to JWT. 

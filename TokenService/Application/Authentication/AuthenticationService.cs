@@ -66,7 +66,6 @@ namespace Application
             string refresh_token = JWTTokenService.GenerateRefreshToken();
             User user = oauth.User.SingleOrDefault(x => x.UserName == username);
             user.RefreshToken = refresh_token;
-            //oauth.Update(user);
             oauth.SaveChanges();
             return refresh_token;
         }

@@ -1,0 +1,24 @@
+{
+	"id": "b8fb3d9d-63a4-478a-a2d2-c580877d4448",
+	"name": "OAuth Dev",
+	"values": [
+		{
+			"key": "refresh_token",
+			"value": "baWQD2xUD4kL7DX3AFNWi+OsWNY2PFbnKWJhOOzegCI=",
+			"enabled": true
+		},
+		{
+			"key": "verify_token",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "host",
+			"value": "",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2020-04-14T23:48:09.893Z",
+	"_postman_exported_using": "Postman/7.21.2"
+}

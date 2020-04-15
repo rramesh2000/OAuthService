@@ -1,6 +1,7 @@
 ﻿using Application.Common.Behaviours.JWT;
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using Domain.Enums;
 using Domain.ValueObjects;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -13,6 +14,7 @@ namespace Application.Common.Behaviours
     public class JWTTokenService : ITokenService
     {
         public string SecretKey { get; set; }
+        public string algorithm { get; set; }
         public IEncryptionService EncryptSvc { get; set; }
         public IConfiguration config { get; set; }
 
@@ -21,6 +23,7 @@ namespace Application.Common.Behaviours
             EncryptSvc = encryptSvc;
             config = configuration;
             SecretKey = config["Secretkey"];
+            algorithm = config.GetValue<string>("jwt:header:alg");
         }
 
         public string GenerateAccessToken(UserDTO user)
@@ -28,7 +31,7 @@ namespace Application.Common.Behaviours
             int tokenExpiery = int.Parse(config["AccessTokenLife"]);
             Header header = new Header
             {
-                alg = config.GetValue<string>("jwt:header:alg"),
+                alg = algorithm,
                 typ = config.GetValue<string>("jwt:header:typ")
             };
 
@@ -52,7 +55,7 @@ namespace Application.Common.Behaviours
 
             string headerStr = JsonSerializer.Serialize(header);
             string payloadStr = JsonSerializer.Serialize(payload);
-            string signatureStr = GetSignature(headerStr, payloadStr, SecretKey);
+            string signatureStr = GetSignature(headerStr, payloadStr, SecretKey, (ALG)Enum.Parse(typeof(ALG), algorithm, true));
             string tokenStr = headerStr.Base64Encode() + "." + payloadStr.Base64Encode() + "." + signatureStr;
             return tokenStr;
         }
@@ -73,7 +76,7 @@ namespace Application.Common.Behaviours
             string headerStr = arr[0].Base64Decode();
             string payloadStr = arr[1].Base64Decode();
             string passedSignatureStr = arr[2];
-            string signatureStr = GetSignature(headerStr, payloadStr, SecretKey);
+            string signatureStr = GetSignature(headerStr, payloadStr, SecretKey, (ALG)Enum.Parse(typeof(ALG), algorithm, true));
             if (passedSignatureStr == signatureStr)
             {
                 tmpBool = true;
@@ -94,9 +97,9 @@ namespace Application.Common.Behaviours
             return tmpBool;
         }
 
-        private string GetSignature(string headerStr, string payloadStr, string SecretKey)
+        private string GetSignature(string headerStr, string payloadStr, string SecretKey, ALG alg)
         {
-            string value = EncryptSvc.Encrypt(headerStr.Base64Encode() + "." + payloadStr.Base64Encode(), SecretKey);
+            string value = EncryptSvc.ComputeHmac(headerStr.Base64Encode() + "." + payloadStr.Base64Encode(), SecretKey, alg);
             return value;
         }
 

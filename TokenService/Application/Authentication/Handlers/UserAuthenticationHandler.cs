@@ -1,6 +1,7 @@
 ﻿using Application.Common.Behaviours;
 using Application.Common.Exceptions;
 using Application.Common.Models;
+using Domain.Enums;
 
 namespace Application.Authentication.Handlers
 {
@@ -18,7 +19,7 @@ namespace Application.Authentication.Handlers
             var hash = encryptionService.GenerateSaltedHashPassword(userLogin.Salt, userLogin.password);
             if (!encryptionService.VerifyPassword(userLogin.password, hash.Hash, hash.Salt))
             {
-                throw new InvalidUserException("Invalid User");
+                throw new InvalidUserException(TokenConstants.InvalidUser);
             }
             base.Handle(userLogin);
         }
