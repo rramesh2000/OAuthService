@@ -14,14 +14,14 @@ namespace Application.Common.Behaviours
 {
 
     /// <summary>
-    /// TODO: Does all of the encryptions. Would break this further down to single responsinility classes and rename to CustomEncryptionService.
+    /// TODO: Does all of the encryptions. Would break this further down to single responsibility classes and rename to CustomEncryptionService.
     /// </summary>
     public class EncryptionService : IEncryptionService
     {
         public EncryptionService()
         {
         }
-        
+
         public string ComputeHmac(string data, string secretKey, ALG alg)
         {
             byte[] bdata = Encoding.UTF8.GetBytes(data);
@@ -29,20 +29,20 @@ namespace Application.Common.Behaviours
 
             switch (alg)
             {
-                case ALG. HS256:
+                case ALG.HS256:
                     return Convert.ToBase64String(ComputeHmacsha256(bdata, bkey));
                 case ALG.HS512:
                     return Convert.ToBase64String(ComputeHmacsha512(bdata, bkey));
                 case ALG.HS384:
                     return Convert.ToBase64String(ComputeHmacsha384(bdata, bkey));
                 case ALG.RS256:
-                    return Convert.ToBase64String(ComputeRS256(bdata, bkey));           
+                    return Convert.ToBase64String(ComputeRS256(bdata, bkey));
                 default:
                     return Convert.ToBase64String(ComputeHmacsha256(bdata, bkey));
             }
         }
 
-        public static byte[] ComputeHmacsha256(byte[] toBeHashed, byte[] key)
+        public byte[] ComputeHmacsha256(byte[] toBeHashed, byte[] key)
         {
             using (var hmac = new HMACSHA256(key))
             {
@@ -50,7 +50,7 @@ namespace Application.Common.Behaviours
             }
         }
 
-        public static byte[] ComputeHmacsha384(byte[] toBeHashed, byte[] key)
+        public byte[] ComputeHmacsha384(byte[] toBeHashed, byte[] key)
         {
             using (var hmac = new HMACSHA384(key))
             {
@@ -58,15 +58,14 @@ namespace Application.Common.Behaviours
             }
         }
 
-        public static byte[] ComputeHmacsha512(byte[] toBeHashed, byte[] key)
+        public byte[] ComputeHmacsha512(byte[] toBeHashed, byte[] key)
         {
             using (var hmac = new HMACSHA512(key))
             {
                 return hmac.ComputeHash(toBeHashed);
             }
         }
-
-        public static byte[] ComputeRS256(byte[] toBeHashed, byte[] key)
+        public byte[] ComputeRS256(byte[] toBeHashed, byte[] key)
         {
             var privKeyObj = Asn1Object.FromByteArray(key);
             var privStruct = RsaPrivateKeyStructure.GetInstance((Asn1Sequence)privKeyObj);
@@ -75,7 +74,6 @@ namespace Application.Common.Behaviours
             sig.BlockUpdate(toBeHashed, 0, toBeHashed.Length);
             return sig.GenerateSignature();
         }
-
         public HashSalt GenerateSaltedHashPassword(string salt, string password)
         {
             var saltBytes = Encoding.UTF8.GetBytes(salt);
@@ -85,14 +83,12 @@ namespace Application.Common.Behaviours
             HashSalt hashSalt = new HashSalt { Hash = hashPassword, Salt = salt };
             return hashSalt;
         }
-
         public bool VerifyPassword(string enteredPassword, string storedHash, string storedSalt)
         {
             var saltBytes = Encoding.UTF8.GetBytes(storedSalt);
             var rfc2898DeriveBytes = new Rfc2898DeriveBytes(enteredPassword, saltBytes, 10000);
             return Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(256)) == storedHash;
         }
-
         public string GetSalt()
         {
             var random = new RNGCryptoServiceProvider();
