@@ -1,7 +1,7 @@
 ﻿using Application.Common.Behaviours;
 using Application.Common.Interfaces;
 using Application.Common.Models;
-using Domain.Entities;
+using Application.JWT;
 using Infrastructure.Logging;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
@@ -22,10 +22,10 @@ namespace NUnitTestApplication
             itsLogger = new TSLogger();
             encryptSvc = new EncryptionService();
             configuration = TestHelper.GetIConfigurationRoot(TestContext.CurrentContext.TestDirectory);
-            jWTTokenService = new JWTTokenService(itsLogger,encryptSvc, configuration);
+            jWTTokenService = new JWTTokenService(itsLogger, encryptSvc, configuration);
         }
 
-        [Test]        
+        [Test]
         public void TestVerifyToken()
         {
             UserDTO use = new UserDTO { UserName = "rramesh", Salt = "z1GRw9XD6tYT10qMqKf0cO7rPcsvkVllugZittGCL0Y=", HashPassword = "", UserId = Guid.NewGuid() };

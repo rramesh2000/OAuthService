@@ -70,7 +70,6 @@ namespace NUnitTestApplication
             Assert.AreEqual(expected, hashStr);
         }
 
-
         [Test]
         public void TestComputeHmac512()
         {
@@ -89,7 +88,5 @@ namespace NUnitTestApplication
             }
             return hex.ToString();
         }
-
-
     }
 }

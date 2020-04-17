@@ -1,6 +1,6 @@
-﻿using Application.Common.Behaviours.JWT;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.JWT.Extensions;
 using Domain.Enums;
 using Domain.ValueObjects;
 using Microsoft.Extensions.Configuration;
@@ -8,9 +8,9 @@ using System;
 using System.Security.Cryptography;
 using System.Text.Json;
 
-namespace Application.Common.Behaviours
+namespace Application.JWT
 {
-    //TODO: Refactor this using Facade pattern 
+
     public class JWTTokenService : ITokenService
     {
         public string SecretKey { get; set; }

@@ -2,6 +2,7 @@ using Application;
 using Application.Common.Behaviours;
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.JWT;
 using Application.TokenValidation;
 using Domain.Entities;
 using Domain.Enums;
@@ -36,8 +37,8 @@ namespace NUnitTestApplication
         {
             ITSLogger log = new TSLogger();
             AccessTokenDTO accessDTO = new AccessTokenDTO();
-            UserDTO userLoginDTO = new UserDTO {  UserName = "ronald", password = "test26832549658" };
-            IAuthenticationService tm = new AuthenticationService(configuration,log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+            UserDTO userLoginDTO = new UserDTO { UserName = "ronald", password = "test26832549658" };
+            IAuthenticationService tm = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
             accessDTO.Authorization = tm.AuthenticateUserLogin(userLoginDTO).access_token;
             TokenValidationService tv = new TokenValidationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
             string result = tv.VerifyToken(accessDTO);

@@ -1,8 +1,10 @@
 ﻿using Application.Common.Behaviours;
 using Application.Common.Interfaces;
+using Application.JWT;
 using Infrastructure.Logging;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace TokenService.Controllers
@@ -18,10 +20,12 @@ namespace TokenService.Controllers
         public IEncryptionService EncryptionService { get; set; }
         public BaseController(IConfiguration configuration)
         {
-            this.configuration = configuration;            
+            this.configuration = configuration;
             EncryptionService = new EncryptionService();
             itsLogger = new TSLogger();
-            OAuthDbContext = new OAuthContext();
+            var optionsBuilder = new DbContextOptionsBuilder<OAuthContext>();
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("OAuthDatabase"));
+            OAuthDbContext = new OAuthContext(optionsBuilder.Options);
             JWTTokenService = new JWTTokenService(itsLogger, EncryptionService, this.configuration);
         }
     }

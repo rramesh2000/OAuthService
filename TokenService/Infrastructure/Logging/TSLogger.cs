@@ -8,7 +8,6 @@ namespace Infrastructure.Logging
     public class TSLogger : ITSLogger
     {
         public Logger Log { get; set; }
-
         public TSLogger()
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
