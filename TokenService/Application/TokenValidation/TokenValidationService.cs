@@ -19,7 +19,7 @@ namespace Application.TokenValidation
             try
             {
                 string SecretKey = config["Secretkey"];
-                AuthorizationDTO authorizationVm = new AuthorizationDTO(auth.Authorization, false, SecretKey, JWTTokenService);
+                ResponseDTO authorizationVm = new ResponseDTO(auth.Authorization, false, SecretKey, JWTTokenService);
                 var handler = new TokenVerificationHandler();
                 handler.SetNext(new TokenTimeVerificationHandler()).SetNext(new TokenRevocationHandler());
                 handler.Handle(authorizationVm);

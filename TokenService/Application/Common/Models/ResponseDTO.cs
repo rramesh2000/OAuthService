@@ -2,13 +2,13 @@
 
 namespace Application.TokenValidation.Models
 {
-    public class AuthorizationDTO
+    public class ResponseDTO
     {
-        public AuthorizationDTO()
+        public ResponseDTO()
         {
         }
 
-        public AuthorizationDTO(string authorization, bool isValid, string secret, ITokenService jWTTokenService)
+        public ResponseDTO(string authorization, bool isValid, string secret, ITokenService jWTTokenService)
         {
             Authorization = authorization;
             IsValid = isValid;

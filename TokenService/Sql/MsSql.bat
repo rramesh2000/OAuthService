@@ -15,12 +15,6 @@ CREATE DATABASE [OAuth];
 USE [OAuth]
 GO
 
-
-/****** Object:  Table [dbo].[Users]    Script Date: 4/2/2020 4:47:30 PM ******/
-DROP TABLE [dbo].[Users]
-GO
-
-
 /****** Object:  Table [dbo].[Users]    Script Date: 4/2/2020 4:47:30 PM ******/
 SET ANSI_NULLS ON
 GO
@@ -33,6 +27,19 @@ CREATE TABLE [dbo].[Users](
 	[UserName] [nvarchar](100)  NOT NULL,
 	[Salt] [nvarchar](150) NULL,
 	[HashPassword] [nvarchar](500) NULL	
+) ON [PRIMARY]
+GO
+
+
+CREATE TABLE [dbo].[Client](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Client_Id] [uniqueidentifier] NOT NULL,
+	[ClientName] [nvarchar](150) NOT NULL, 
+	[Client_Secret] [nvarchar](150) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Client_Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
 

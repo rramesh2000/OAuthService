@@ -5,9 +5,9 @@ using Domain.Enums;
 
 namespace Application.TokenValidation.Handlers
 {
-    public class TokenRevocationHandler : Handler<AuthorizationDTO>
+    public class TokenRevocationHandler : Handler<ResponseDTO>
     {
-        public override void Handle(AuthorizationDTO auth)
+        public override void Handle(ResponseDTO auth)
         {           
             if (0 != 0)
             {

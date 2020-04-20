@@ -5,11 +5,6 @@ namespace Application.Common.Models
 {
     public class UserDTO
     {
-        public UserDTO()
-        {
-            this.UserName = UserName;
-            this.password = password;
-        }
         [IgnoreDataMember]
         public Guid UserId { get; set; }
         public string UserName { get; set; }
@@ -20,5 +15,11 @@ namespace Application.Common.Models
         public string HashPassword { get; set; }
         [IgnoreDataMember]
         public string RefreshToken { get; set; }
+
+        public UserDTO()
+        {
+            this.UserName = UserName;
+            this.password = password;
+        }
     }
 }

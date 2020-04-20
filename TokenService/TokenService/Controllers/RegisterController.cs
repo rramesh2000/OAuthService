@@ -18,7 +18,7 @@ namespace TokenService.Controllers
 
         // POST: api/Token
         [HttpPost]
-        [Route("/api/register")]
+        [Route("/api/register/user")]
         public IActionResult Post(UserDTO user)
         {
             try
@@ -35,6 +35,27 @@ namespace TokenService.Controllers
                 return BadRequest(new BadRequestError(ex.Message));
             }
             return Ok(user);
-        }        
+        }
+
+        // POST: api/Token
+        [HttpPost]
+        [Route("/api/register/client")]
+        public IActionResult Post(ClientDTO client)
+        {
+            try
+            {
+                RegistrationService registrationService = new RegistrationService(configuration, itsLogger, JWTTokenService, OAuthDbContext, EncryptionService);
+                client = registrationService.SaveClient(client);
+            }
+            catch (InvalidUserException exUser)
+            {
+                return BadRequest(new BadRequestError(exUser.Message));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new BadRequestError(ex.Message));
+            }
+            return Ok(client);
+        }
     }
 }

@@ -3,9 +3,9 @@ using Application.Common.Exceptions;
 using Application.TokenValidation.Models;
 namespace Application.TokenValidation.Handlers
 {
-    public class TokenVerificationHandler : Handler<AuthorizationDTO>
+    public class TokenVerificationHandler : Handler<ResponseDTO>
     {
-        public override void Handle(AuthorizationDTO auth)
+        public override void Handle(ResponseDTO auth)
         {
             if (!auth.JWTTokenService.VerifyAccessToken(auth.Authorization))
             {

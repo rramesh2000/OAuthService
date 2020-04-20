@@ -2,11 +2,11 @@
 using Application.Common.Behaviours;
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.JWT;
 using Application.TokenValidation;
 using Domain.Entities;
 using Domain.Enums;
 using Infrastructure.Logging;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using System;
@@ -31,7 +31,7 @@ namespace NUnitTestApplication
         public void TestAuthenticateUserLogin()
         {
             ITSLogger log = new TSLogger();
-            UserDTO userLogin = new UserDTO { UserName = "ronald", password= "test26832549658" };
+            UserDTO userLogin = new UserDTO { UserName = "ronald", password = "test26832549658" };
             AccessTokenDTO accessDTO = new AccessTokenDTO();
             AuthenticationDTO authenticationDTO = new AuthenticationDTO();
             AuthenticationService authenticationService = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
@@ -47,7 +47,7 @@ namespace NUnitTestApplication
             ITSLogger log = new TSLogger();
             UserDTO userLogin = new UserDTO { UserName = "ronald", password = "test26832549658" };
             AccessTokenDTO accessDTO = new AccessTokenDTO();
-            RefreshTokenDTO refreshTokenDTO = new RefreshTokenDTO();            
+            RefreshTokenDTO refreshTokenDTO = new RefreshTokenDTO();
             AuthenticationDTO authenticationDTO = new AuthenticationDTO();
             AuthenticationService authenticationService = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
             authenticationDTO = authenticationService.AuthenticateUserLogin(userLogin);
