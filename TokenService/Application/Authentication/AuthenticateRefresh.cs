@@ -8,19 +8,18 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 
-namespace Application
+namespace Application.Authentication
 {
-    public class AuthenticateRefresh : BaseService
+    public class AuthenticateRefresh : BaseService, IAuthenticate
     {
         public string SecretKey { get; set; }
         public AuthenticateRefresh(IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(configuration, log, jWTTokenService, oauth, encryptSvc)
         {
         }
 
-
-
-        public AuthenticationDTO AuthenticateRefreshToken(RefreshTokenDTO refauth)
+        public AuthenticationDTO AuthenticateGetToken(AuthorizationGrantRequestDTO authorizationGrantRequest) 
         {
+            RefreshTokenDTO refauth = new RefreshTokenDTO { Authorization= authorizationGrantRequest.Refresh_Token};
             AuthenticationDTO auth = new AuthenticationDTO();
             try
             {

@@ -5,17 +5,18 @@ using System;
 
 namespace Application.Common.Models
 {
-    public class AuthorizeDTO
+    public class AuthorizationGrantRequestDTO
     {
-        [BindNever]
-        public int ID { get; set; }
-        [FromQuery]
-        public AuthorizationGrantType Response_Type { get; set; }
+        public AuthorizationGrantType Grant_Type { get; set; }
         public Guid Client_Id { get; set; }    
-        public string redirect_uri { get; set; }
+        public string Redirect_Uri { get; set; }
         public string Scope { get; set; }
         public string State { get; set; }
         public string Code { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
+        public string Refresh_Token { get; set; }
+
     }
 
 }

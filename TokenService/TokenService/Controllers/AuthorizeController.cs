@@ -19,10 +19,10 @@ namespace TokenService.Controllers
         }
 
         [HttpGet]
-        [Route("/api/auth")]
-        public IActionResult Get([FromQuery] AuthorizeDTO authorizeDTO)
+       
+        public IActionResult Get([FromQuery] AuthorizationRequestDTO authorizeDTO)
         {
-            AuthResponseDTO authResponseDTO = new AuthResponseDTO();
+            AuthorizationResponseDTO authResponseDTO = new AuthorizationResponseDTO();
             try
             {
                 IAuthorizationService authorizationService = new AuthorizationService(
@@ -46,6 +46,7 @@ namespace TokenService.Controllers
                 return Unauthorized(new UnauthorizedError(ex.Message));
             }
             return Ok(authResponseDTO);
+          
         }
 
     }

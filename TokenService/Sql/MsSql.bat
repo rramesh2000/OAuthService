@@ -30,6 +30,14 @@ CREATE TABLE [dbo].[Users](
 ) ON [PRIMARY]
 GO
 
+CREATE TABLE [dbo].[Authorize](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [uniqueidentifier] NOT NULL,
+	[Client_Id] [uniqueidentifier] NOT NULL,
+	[Scope] [nvarchar](150) NOT NULL,
+	[Code] [nvarchar](150) NOT NULL
+) ON [PRIMARY]
+GO
 
 CREATE TABLE [dbo].[Client](
 	[Id] [int] IDENTITY(1,1) NOT NULL,

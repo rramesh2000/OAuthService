@@ -1,4 +1,5 @@
 ﻿using Application;
+using Application.Authentication;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
@@ -18,9 +19,12 @@ namespace TokenService.Controllers
         {
         }
 
+ 
+
         [HttpPost]
+ 
         [Route("/api/token")]
-        public IActionResult Post(UserDTO user)
+        public IActionResult Post(AuthorizationGrantRequestDTO token)
         {
             AuthenticationDTO Authorization = new AuthenticationDTO();
             try
@@ -31,7 +35,7 @@ namespace TokenService.Controllers
                     JWTTokenService,
                     OAuthDbContext,
                     EncryptionService);
-                Authorization = tm.AuthenticateUserLogin(user);
+                Authorization = tm.Authenticate(token);
             }
             catch (InvalidUserException exUser)
             {
@@ -71,32 +75,32 @@ namespace TokenService.Controllers
             return Ok(tmp);
         }
 
-        [HttpPost]
-        [Route("/api/token/refresh")]
-        [ActionName("refresh")]
-        public IActionResult Post(RefreshTokenDTO auth)
-        {
-            AuthenticationDTO Authorization = new AuthenticationDTO();
-            try
-            {
-                IAuthenticationService tm = new AuthenticationService(
-                    configuration,
-                    itsLogger,
-                    JWTTokenService,
-                    OAuthDbContext,
-                    EncryptionService);
-                Authorization = tm.AuthenticateRefreshToken(auth);
-            }
-            catch (InvalidUserException exUser)
-            {
-                return Unauthorized(new UnauthorizedError(exUser.Message));
-            }
-            catch (Exception ex)
-            {
-                return Unauthorized(new UnauthorizedError(ex.Message));
-            }
-            return Ok(Authorization);
-        }
+        //[HttpPost]
+        //[Route("/api/token/refresh")]
+        //[ActionName("refresh")]
+        //public IActionResult Post(RefreshTokenDTO auth)
+        //{
+        //    AuthenticationDTO Authorization = new AuthenticationDTO();
+        //    try
+        //    {
+        //        IAuthenticationService tm = new AuthenticationService(
+        //            configuration,
+        //            itsLogger,
+        //            JWTTokenService,
+        //            OAuthDbContext,
+        //            EncryptionService);
+        //        Authorization = tm.AuthenticateRefreshToken(auth);
+        //    }
+        //    catch (InvalidUserException exUser)
+        //    {
+        //        return Unauthorized(new UnauthorizedError(exUser.Message));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Unauthorized(new UnauthorizedError(ex.Message));
+        //    }
+        //    return Ok(Authorization);
+        //}
 
     }
 }

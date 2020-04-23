@@ -4,5 +4,5 @@
 
     public enum ResponseType { code }
 
-    public enum AuthorizationGrantType {code, devicecode, clientcredentials, refreshtoken }
+    public enum AuthorizationGrantType { authorization_code, client_credentials, password, refresh_token }
 }

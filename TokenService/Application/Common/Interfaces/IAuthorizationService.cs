@@ -5,6 +5,6 @@ namespace Application.Common.Interfaces
 {
     public interface IAuthorizationService
     {
-        AuthResponseDTO GetAuthorization(AuthorizeDTO authorizeDTO);
+        AuthorizationResponseDTO GetAuthorization(AuthorizationRequestDTO authorizeDTO);
     }
 }

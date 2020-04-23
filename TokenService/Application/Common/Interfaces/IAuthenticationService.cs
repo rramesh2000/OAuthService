@@ -4,7 +4,6 @@ namespace Application.Common.Interfaces
 {
     public interface IAuthenticationService
     {
-        AuthenticationDTO AuthenticateUserLogin(UserDTO userLogin);
-        AuthenticationDTO AuthenticateRefreshToken(RefreshTokenDTO refauth);
+          AuthenticationDTO Authenticate(AuthorizationGrantRequestDTO token);
     }
 }

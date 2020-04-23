@@ -8,8 +8,8 @@ namespace Application.Common.Mapper
     {
         public AuthorizeProfile()
         {
-            CreateMap<Authorize, AuthorizeDTO>().ReverseMap();
-            CreateMap<AuthResponseDTO, AuthorizeDTO>().ReverseMap();
+            CreateMap<Authorize, AuthorizationRequestDTO>().ReverseMap();
+            CreateMap<AuthResponseDTO, AuthorizationRequestDTO>().ReverseMap();
         }
     }
 }

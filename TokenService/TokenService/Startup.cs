@@ -18,6 +18,7 @@ namespace TokenService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRazorPages();
             services.AddControllers();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSwaggerDocument(config =>
@@ -52,7 +53,8 @@ namespace TokenService
             // Handles non-success status codes with empty body
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
-            app.UseHttpsRedirection();
+            app.UseHttpsRedirection(); 
+            app.UseStaticFiles();
 
             app.UseRouting();
 
@@ -60,8 +62,10 @@ namespace TokenService
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
                 endpoints.MapControllers();
             });
+ 
         }
     }
 }

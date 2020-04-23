@@ -1,6 +1,8 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using Application.Common.Models;
 using Domain.Entities;
+using Domain.Enums;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
@@ -14,17 +16,24 @@ namespace Application.Authorization
 
         }
 
-        public AuthResponseDTO GetAuthorization(AuthorizeDTO authorizeDTO)
+        public AuthorizationResponseDTO GetAuthorization(AuthorizationRequestDTO authorizeDTO)
         {
-            AuthResponseDTO authResponseDTO = new AuthResponseDTO();
-            Authorize authorize = mapper.Map<Authorize>(authorizeDTO);
-            Client client = oauth.Client.SingleOrDefault(x => x.Client_Id == authorizeDTO.Client_Id);
-            authorize.Code = JWTTokenService.GenerateRefreshToken();
-            oauth.Authorize.Add(authorize);
-            oauth.SaveChanges();
-            authResponseDTO.Code = authorize.Code;
-            authResponseDTO.State = authorizeDTO.redirect_uri;
-            authResponseDTO.redirect_uri = authorizeDTO.State;
+            AuthorizationResponseDTO authResponseDTO = new AuthorizationResponseDTO();
+            try
+            {              
+                Authorize authorize = mapper.Map<Authorize>(authorizeDTO);
+                Client client = oauth.Client.SingleOrDefault(x => x.Client_Id == authorizeDTO.Client_Id);
+                if (client.Client_Id != authorizeDTO.Client_Id) { throw new InvalidClientException(TokenConstants.InvalidClient); }
+                authorize.Code = JWTTokenService.GenerateRefreshToken();
+                oauth.Authorize.Add(authorize);
+                oauth.SaveChanges();
+                authResponseDTO.Code = authorize.Code;
+                authResponseDTO.State = authorizeDTO.State;
+                authResponseDTO.Redirect_Uri = authorizeDTO.Redirect_Uri;
+            }
+            catch {
+                
+            }
             return authResponseDTO;
         }
          
