@@ -8,21 +8,18 @@
 <div class="row">
     <div class="col-md-8">
         <section>
-            <form method="post" role="form" class="form-horizontal">
-                <div>Username </div>
+            <form method="post" role="form" class="form-horizontal">                
                 <div class="form-group">
-                    @Html.LabelFor(m => m.user.UserName, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
+                    <span class="col-md-2 control-label"> UserName </span>
+                     <div class="col-md-10">
                         <input type="text" asp-for="user.UserName" class="form-control" />
-                        @Html.ValidationMessageFor(m => m.user.UserName, "", new { @class = "text-danger" })
-                    </div>
+                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(m => m.user.Password, new { @class = "col-md-2 control-label" })
+                    <span class = "col-md-2 control-label" > Password </span>
                     <div class="col-md-10">
                         <input type="text" asp-for="user.password" class="form-control" />
-                        @Html.ValidationMessageFor(m => m.user.Password, "", new { @class = "text-danger" })
-                    </div>
+                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
