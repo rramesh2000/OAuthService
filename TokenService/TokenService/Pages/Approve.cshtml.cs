@@ -1,5 +1,5 @@
-﻿using Application.Authentication;
-using Application.Authorization;
+﻿using Application.Authorization;
+using Application.Clients;
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Domain.Enums;
@@ -21,12 +21,21 @@ namespace TokenService.Pages
         public AuthorizationRequestDTO authorizationRequestDTO { get; set; }
         public void OnGet(AuthorizationGrantType Response_Type, string Client_Id, string Redirect_Uri, string Scope, string State)
         {
-            authorizationRequestDTO = new AuthorizationRequestDTO();
-            authorizationRequestDTO.Response_Type = Response_Type;
-            authorizationRequestDTO.Client_Id = Guid.Parse(Client_Id);
-            authorizationRequestDTO.Redirect_Uri = Redirect_Uri;
-            authorizationRequestDTO.Scope = Scope;
-            authorizationRequestDTO.State = State;
+          ClientService clientService = new ClientService(configuration,
+                    itsLogger,
+                    JWTTokenService,
+                    OAuthDbContext,
+                    EncryptionService);
+            authorizationRequestDTO = new AuthorizationRequestDTO
+            {
+                Response_Type = Response_Type,
+                Client_Id = Guid.Parse(Client_Id),
+                Redirect_Uri = Redirect_Uri,
+                Scope = Scope,
+                State = State
+            };
+            ClientDTO clientDTO = clientService.GetClient(Guid.Parse(Client_Id));
+            Message = clientDTO.ClientName + " would like " + Scope + " access to your resources.";
         }
 
         public IActionResult OnPost()

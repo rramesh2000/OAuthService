@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Application.Authentication;
+﻿using Application.Authentication;
+using Application.Clients;
 using Application.Common.Models;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
+using System;
 
 namespace TokenService.Pages
 {
@@ -15,7 +12,7 @@ namespace TokenService.Pages
     {
         public AuthModel(IConfiguration configuration) : base(configuration)
         { }
-        
+
         [BindProperty]
         public UserDTO user { get; set; }
 
@@ -23,15 +20,24 @@ namespace TokenService.Pages
         public AuthorizationRequestDTO authorizationRequestDTO { get; set; }
         public void OnGet(string Response_Type, string Client_Id, string Redirect_Uri, string Scope, string State)
         {
-            authorizationRequestDTO = new AuthorizationRequestDTO();
-            authorizationRequestDTO.Response_Type = (AuthorizationGrantType)Enum.Parse(typeof(AuthorizationGrantType), Response_Type, true);
-            authorizationRequestDTO.Client_Id = Guid.Parse(Client_Id);
-            authorizationRequestDTO.Redirect_Uri = Redirect_Uri;
-            authorizationRequestDTO.Scope = Scope;
-            authorizationRequestDTO.State = State;
-     
+            ClientService clientService = new ClientService(configuration,
+                    itsLogger,
+                    JWTTokenService,
+                    OAuthDbContext,
+                    EncryptionService);
+            authorizationRequestDTO = new AuthorizationRequestDTO
+            {
+                Response_Type = (AuthorizationGrantType)Enum.Parse(typeof(AuthorizationGrantType), Response_Type, true),
+                Client_Id = Guid.Parse(Client_Id),
+                Redirect_Uri = Redirect_Uri,
+                Scope = Scope,
+                State = State
+            };
+            ClientDTO clientDTO = clientService.GetClient(Guid.Parse(Client_Id));
+
         }
-        public IActionResult OnPost() {
+        public IActionResult OnPost()
+        {
             if (ModelState.IsValid == false)
             {
                 return Page();
@@ -43,7 +49,8 @@ namespace TokenService.Pages
                     JWTTokenService,
                     OAuthDbContext,
                     EncryptionService);
-            if (userLogin.Login(user).IsAuthenticated) {
+            if (userLogin.Login(user).IsAuthenticated)
+            {
                 return RedirectToPage("Approve", authorizationRequestDTO);
             }
             return RedirectToPage();

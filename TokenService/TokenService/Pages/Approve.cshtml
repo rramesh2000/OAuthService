@@ -4,19 +4,21 @@
     ViewData["Title"] = "Approve";
 }
 
-<h1>Approve</h1>
+<div class="jumbotron">
+    <h1>Approve access</h1>
+    <p class="lead"> @Model.Message  </p>
+</div>
 
-<form method="post" role="form" class="form-horizontal" >
+<form method="post" role="form" class="form-horizontal">
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <button  id="Authorize"type="submit" class="btn btn-default">Authorize</button>
+            <button  type="submit" class="btn btn-default">Authorize</button>
         </div>
     </div>
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <button id="Cancel"  type="submit" class="btn btn-default">Cancel</button>
+            <button  type="submit" class="btn btn-default">Cancel</button>
         </div>
     </div>
- 
 </form>
