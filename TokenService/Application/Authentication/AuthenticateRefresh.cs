@@ -20,7 +20,8 @@ namespace Application.Authentication
 
         public AuthenticationDTO AuthenticateGetToken(AuthorizationGrantRequestDTO authorizationGrantRequest) 
         {
-            RefreshTokenDTO refauth = new RefreshTokenDTO { Authorization= authorizationGrantRequest.Refresh_Token};
+            string _refreshToken = HttpUtility.UrlDecode(authorizationGrantRequest.Refresh_Token);
+            RefreshTokenDTO refauth = new RefreshTokenDTO { Authorization= _refreshToken };
             AuthenticationDTO auth = new AuthenticationDTO();
             try
             {

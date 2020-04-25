@@ -1,5 +1,4 @@
-﻿using Application;
-using Application.Authentication;
+﻿using Application.Authentication;
 using Application.Common.Behaviours;
 using Application.Common.Interfaces;
 using Application.Common.Models;
@@ -8,9 +7,11 @@ using Application.TokenValidation;
 using Domain.Entities;
 using Domain.Enums;
 using Infrastructure.Logging;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using System;
+using System.Web;
 
 namespace NUnitTestApplication
 {
@@ -22,11 +23,18 @@ namespace NUnitTestApplication
         [SetUp]
         public void Setup()
         {
+            Guid userId = Guid.Parse("71264886-e911-4f71-a9f7-e850967122fd");
+            Guid clientId = Guid.Parse("29bfd4b1-81c0-4db3-a615-4422d08f9792");
             configuration = TestHelper.GetIConfigurationRoot(TestContext.CurrentContext.TestDirectory);
-            context = TestHelper.GetTokenServiceDbContext();
-            context.User.Add(new User { UserId = Guid.NewGuid(), UserName = "ronald", Salt = "pgsoAvSXD3xYPV+/pSAe3khYZWOFidHPxpltwNDP4Xw=", HashPassword = "iO27OOseTcQsdEbch+UgOqRWGy80o7aZNit80EwggYgJ4f3vfFkMxmk5DKn6OooyiEEUY+YW5pr/9utIb6OR3Z7cFc40ikafRrhQ3sHE1OCM83C4Wxjcffwf721gKLCfJ/vF9AB4KWp/KasDBztCExyAmarZnoKlehZ60iMAlEK/Kgx3J4VualLR+X1gk1bpdP/jNZ1ZVFgxq6b5RR6zeJ1Lf5E+BV2ntO2yv7/67/FdXnqL1kivcoxGxX05TgPd8pSQnVc/As+8S5bQXWmandFkJatkGWQc70edq1qoF80KbARqMWXWJvd2tt+ZfytPuuFga7XU5suwMhTb3s9MUw==" });
+            var options = new DbContextOptionsBuilder<Infrastructure.Models.OAuthContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .Options;
+            context = new Infrastructure.Models.OAuthContext(options);
+            context.User.Add(new User { UserId = userId, UserName = "ronald", Salt = "pgsoAvSXD3xYPV+/pSAe3khYZWOFidHPxpltwNDP4Xw=", HashPassword = "iO27OOseTcQsdEbch+UgOqRWGy80o7aZNit80EwggYgJ4f3vfFkMxmk5DKn6OooyiEEUY+YW5pr/9utIb6OR3Z7cFc40ikafRrhQ3sHE1OCM83C4Wxjcffwf721gKLCfJ/vF9AB4KWp/KasDBztCExyAmarZnoKlehZ60iMAlEK/Kgx3J4VualLR+X1gk1bpdP/jNZ1ZVFgxq6b5RR6zeJ1Lf5E+BV2ntO2yv7/67/FdXnqL1kivcoxGxX05TgPd8pSQnVc/As+8S5bQXWmandFkJatkGWQc70edq1qoF80KbARqMWXWJvd2tt+ZfytPuuFga7XU5suwMhTb3s9MUw==" });
+            context.Authorize.Add(new Authorize { Client_Id = clientId, Code = "pgsoAvSXD3xYPV+/pSAe3khYZWOFidHPxpltwNDP4Xw=", UserId = userId, Scope = "photos", ID = 0 });
             context.SaveChanges();
         }
+
 
         [Test]
         public void TestAuthenticateUserLogin()
@@ -35,64 +43,53 @@ namespace NUnitTestApplication
             UserDTO userDTO = new UserDTO { UserName = "ronald", password = "test26832549658" };
             UserLogin userLogin = new UserLogin(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
             userDTO = userLogin.Login(userDTO);
-
- 
-           // Assert.AreEqual(TokenConstants.ValidToken, tv.VerifyToken(accessDTO));
+            Assert.AreEqual(userDTO.HashPassword, "iO27OOseTcQsdEbch+UgOqRWGy80o7aZNit80EwggYgJ4f3vfFkMxmk5DKn6OooyiEEUY+YW5pr/9utIb6OR3Z7cFc40ikafRrhQ3sHE1OCM83C4Wxjcffwf721gKLCfJ/vF9AB4KWp/KasDBztCExyAmarZnoKlehZ60iMAlEK/Kgx3J4VualLR+X1gk1bpdP/jNZ1ZVFgxq6b5RR6zeJ1Lf5E+BV2ntO2yv7/67/FdXnqL1kivcoxGxX05TgPd8pSQnVc/As+8S5bQXWmandFkJatkGWQc70edq1qoF80KbARqMWXWJvd2tt+ZfytPuuFga7XU5suwMhTb3s9MUw==");
         }
 
         [Test]
-        public void TestAuthenticateRefreshToken()
+        public void TestAuthenticateAccessTokenFromCode()
         {
             ITSLogger log = new TSLogger();
-            UserDTO userLogin = new UserDTO { UserName = "ronald", password = "test26832549658" };
             AccessTokenDTO accessDTO = new AccessTokenDTO();
-            RefreshTokenDTO refreshTokenDTO = new RefreshTokenDTO();
-            AuthenticationDTO authenticationDTO = new AuthenticationDTO();
-            AuthenticationService authenticationService = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
-            authenticationDTO = authenticationService.AuthenticateUserLogin(userLogin);
-            refreshTokenDTO.Authorization = authenticationDTO.refresh_token;
-            authenticationDTO = authenticationService.AuthenticateRefreshToken(refreshTokenDTO);
-            accessDTO.Authorization = authenticationDTO.access_token;
-            TokenValidationService tv = new TokenValidationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
-            Assert.AreEqual(TokenConstants.ValidToken, tv.VerifyToken(accessDTO));
+            AuthorizationGrantRequestDTO authorizationGrantRequestDTO = new AuthorizationGrantRequestDTO
+            {
+                Client_Id = Guid.Parse("29bfd4b1-81c0-4db3-a615-4422d08f9792"),
+                Code = HttpUtility.UrlEncode("pgsoAvSXD3xYPV+/pSAe3khYZWOFidHPxpltwNDP4Xw="),
+                Grant_Type = AuthorizationGrantType.authorization_code,
+                UserName = null,
+                Scope = null,
+                Password = null,
+                Redirect_Uri = null,
+                Refresh_Token = null,
+                State = null
+            };
+            IAuthenticationService tm = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+            accessDTO.Authorization = accessDTO.Authorization = tm.Authenticate(authorizationGrantRequestDTO).access_token;
+            TokenValidationService tokenValidationService = new TokenValidationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+            Assert.AreEqual(TokenConstants.ValidToken, tokenValidationService.VerifyToken(accessDTO));
         }
 
         [Test]
-        public void TestAuthenticateRefreshTokenCreatesNewAccessToken()
+        public void TestAuthenticateAccessTokenFromRefreshToken()
         {
             ITSLogger log = new TSLogger();
-            UserDTO userLogin = new UserDTO { UserName = "ronald", password = "test26832549658" };
             AccessTokenDTO accessDTO = new AccessTokenDTO();
-            RefreshTokenDTO refreshTokenDTO = new RefreshTokenDTO();
-            AuthenticationDTO authenticationDTO = new AuthenticationDTO();
-            AuthenticationService authenticationService = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
-            authenticationDTO = authenticationService.AuthenticateUserLogin(userLogin);
-            refreshTokenDTO.Authorization = authenticationDTO.refresh_token;
-            authenticationDTO = authenticationService.AuthenticateRefreshToken(refreshTokenDTO);
-            string accessToken1 = authenticationDTO.access_token;
-            refreshTokenDTO.Authorization = authenticationDTO.refresh_token;
-            authenticationDTO = authenticationService.AuthenticateRefreshToken(refreshTokenDTO);
-            string accessToken2 = authenticationDTO.access_token;
-            Assert.AreNotEqual(accessToken1, accessToken2);
-        }
-
-        [Test]
-        public void TestAuthenticateRefreshTokenCreatesNewRefreshToken()
-        {
-            ITSLogger log = new TSLogger();
-            UserDTO userLogin = new UserDTO { UserName = "ronald", password = "test26832549658" };
-            AccessTokenDTO accessDTO = new AccessTokenDTO();
-            RefreshTokenDTO refreshTokenDTO = new RefreshTokenDTO();
-            AuthenticationDTO authenticationDTO = new AuthenticationDTO();
-            AuthenticationService authenticationService = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
-            authenticationDTO = authenticationService.AuthenticateUserLogin(userLogin);
-            refreshTokenDTO.Authorization = authenticationDTO.refresh_token;
-            authenticationDTO = authenticationService.AuthenticateRefreshToken(refreshTokenDTO);
-            string refreshToken1 = authenticationDTO.refresh_token;
-            refreshTokenDTO.Authorization = authenticationDTO.refresh_token;
-            authenticationDTO = authenticationService.AuthenticateRefreshToken(refreshTokenDTO);
-            string refreshToken2 = authenticationDTO.refresh_token;
-            Assert.AreNotEqual(refreshToken1, refreshToken2);
+            AuthorizationGrantRequestDTO authorizationGrantRequestDTO = new AuthorizationGrantRequestDTO
+            {
+                Client_Id = Guid.Parse("29bfd4b1-81c0-4db3-a615-4422d08f9792"),
+                Code = null,
+                Grant_Type = AuthorizationGrantType.refresh_token,
+                UserName = null,
+                Scope = null,
+                Password = null,
+                Redirect_Uri = null,
+                Refresh_Token = HttpUtility.UrlEncode("pgsoAvSXD3xYPV+/pSAe3khYZWOFidHPxpltwNDP4Xw="),
+                State = null
+            };
+            IAuthenticationService tm = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+            accessDTO.Authorization = accessDTO.Authorization = tm.Authenticate(authorizationGrantRequestDTO).access_token;
+            TokenValidationService tokenValidationService = new TokenValidationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+            Assert.AreEqual(TokenConstants.ValidToken, tokenValidationService.VerifyToken(accessDTO));
         }
     }
 }

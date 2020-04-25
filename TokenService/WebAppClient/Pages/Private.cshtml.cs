@@ -48,7 +48,7 @@ namespace WebAppClient.Pages
             string Url = "https://localhost:44306/api/token";
             string Client_Id = "A12D3F38-89BB-42DB-925C-7D78D864C7E3";
             string Grant_Type = "refresh_token";
-            string refresh_token = authorization.refresh_token;
+            string refresh_token = HttpUtility.UrlEncode(authorization.refresh_token);
             string responseBody = await GetToken(Url, Client_Id, Grant_Type, null, refresh_token);            
             AccessTokenResponse accessTokenResponse = JsonConvert.DeserializeObject<AccessTokenResponse>(responseBody);
             authorization.access_token = accessTokenResponse.access_token;
