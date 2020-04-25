@@ -16,6 +16,7 @@ namespace Application.Common.Models
         public string Scope { get; set; }
         public string State { get; set; } 
         public string Client_Secret { get; set; }
+        public Guid UserId { get; set; }
     }
 
 }

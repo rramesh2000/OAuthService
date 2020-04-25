@@ -6,3 +6,32 @@
 
 <h1>Private</h1>
 
+<form method="post" role="form" class="form-horizontal">
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            Using Code ::  <input type="submit" value="Get Token" asp-page-handler="Code" > 
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            Using Refresh Token ::  <input type="submit"  value="Get Token" asp-page-handler="Refresh" > 
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            Code  :: <input asp-for="authorization.Code" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            Access Token ::  <input asp-for="authorization.access_token" /> 
+        </div>
+    </div> <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            Refresh Token ::  <input asp-for="authorization.refresh_token" /> 
+        </div>
+    </div>
+</form>

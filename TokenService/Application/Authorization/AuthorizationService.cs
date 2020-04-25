@@ -6,6 +6,7 @@ using Domain.Enums;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
+using System.Web;
 
 namespace Application.Authorization
 {
@@ -27,7 +28,7 @@ namespace Application.Authorization
                 authorize.Code = JWTTokenService.GenerateRefreshToken();
                 oauth.Authorize.Add(authorize);
                 oauth.SaveChanges();
-                authResponseDTO.Code = authorize.Code;
+                authResponseDTO.Code = HttpUtility.UrlEncode(authorize.Code);
                 authResponseDTO.State = authorizeDTO.State;
                 authResponseDTO.Redirect_Uri = authorizeDTO.Redirect_Uri;
             }

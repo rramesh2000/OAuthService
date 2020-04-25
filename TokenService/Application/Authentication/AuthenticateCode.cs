@@ -7,6 +7,7 @@ using FluentValidation.Results;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
+using System.Web;
 
 namespace Application.Authentication
 {
@@ -23,12 +24,12 @@ namespace Application.Authentication
             try
             {
                 //ValidationResult results = refreshvalidation.Validate(refauth);
-                Authorize authorize = oauth.Authorize.SingleOrDefault(x => x.Code == authorizationGrantRequest.Code);
+                Authorize authorize = oauth.Authorize.SingleOrDefault(x => x.Code == HttpUtility.UrlDecode(authorizationGrantRequest.Code));
                 User user = oauth.User.SingleOrDefault(x => x.UserId == authorize.UserId);
                 auth.token_type = config["TokenType"];
                 UserDTO userDTO = mapper.Map<UserDTO>(user);
                 auth.access_token = JWTTokenService.GenerateAccessToken(userDTO);
-                auth.refresh_token = GetRefreshToken(user.UserName);
+                auth.refresh_token = HttpUtility.UrlEncode(GetRefreshToken(user.UserName));
             }
             catch (Exception ex)
             {

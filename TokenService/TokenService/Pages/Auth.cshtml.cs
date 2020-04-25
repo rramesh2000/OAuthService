@@ -49,8 +49,10 @@ namespace TokenService.Pages
                     JWTTokenService,
                     OAuthDbContext,
                     EncryptionService);
-            if (userLogin.Login(user).IsAuthenticated)
+            UserDTO userDTO = userLogin.Login(user);
+            if (userDTO.IsAuthenticated)
             {
+                authorizationRequestDTO.UserId = userDTO.UserId;
                 return RedirectToPage("Approve", authorizationRequestDTO);
             }
             return RedirectToPage();

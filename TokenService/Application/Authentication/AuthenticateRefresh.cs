@@ -7,6 +7,7 @@ using FluentValidation.Results;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
+using System.Web;
 
 namespace Application.Authentication
 {
@@ -28,7 +29,7 @@ namespace Application.Authentication
                 UserDTO userLoginDTO = mapper.Map<UserDTO>(user);
                 auth.token_type = config["TokenType"];
                 auth.access_token = JWTTokenService.GenerateAccessToken(userLoginDTO);
-                auth.refresh_token = GetRefreshToken(user.UserName);
+                auth.refresh_token = HttpUtility.UrlEncode(GetRefreshToken(user.UserName));
             }
             catch (Exception ex)
             {

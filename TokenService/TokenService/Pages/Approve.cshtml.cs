@@ -6,6 +6,7 @@ using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Web;
 
 namespace TokenService.Pages
 {
@@ -35,7 +36,7 @@ namespace TokenService.Pages
                 State = State
             };
             ClientDTO clientDTO = clientService.GetClient(Guid.Parse(Client_Id));
-            Message = clientDTO.ClientName + " would like " + Scope + " access to your resources.";
+            Message = clientDTO.ClientName + " would like access to " + Scope;
         }
 
         public IActionResult OnPost()
@@ -48,7 +49,7 @@ namespace TokenService.Pages
                          OAuthDbContext,
                          EncryptionService);
             authResponseDTO = authorizationService.GetAuthorization(authorizationRequestDTO);
-            return Redirect(authorizationRequestDTO.Redirect_Uri + "?code=" + authResponseDTO.Code + "&state=" + authorizationRequestDTO.State);
+            return Redirect(authorizationRequestDTO.Redirect_Uri + "?code=" + HttpUtility.UrlEncode(authResponseDTO.Code) + "&state=" + authorizationRequestDTO.State);
         }
 
     }

@@ -1,4 +1,5 @@
 ﻿using Application;
+using Application.Authentication;
 using Application.Common.Behaviours;
 using Application.Common.Interfaces;
 using Application.Common.Models;
@@ -34,7 +35,7 @@ namespace NUnitTestApplication
             UserDTO userLogin = new UserDTO { UserName = "ronald", password = "test26832549658" };
             AccessTokenDTO accessDTO = new AccessTokenDTO();
             AuthenticationDTO authenticationDTO = new AuthenticationDTO();
-            AuthenticationService authenticationService = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+            IAuthenticationService authenticationService = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
             authenticationDTO = authenticationService.AuthenticateUserLogin(userLogin);
             accessDTO.Authorization = authenticationDTO.access_token;
             TokenValidationService tv = new TokenValidationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());

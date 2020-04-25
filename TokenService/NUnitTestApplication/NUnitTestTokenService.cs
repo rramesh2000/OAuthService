@@ -1,4 +1,5 @@
 using Application;
+using Application.Authentication;
 using Application.Common.Behaviours;
 using Application.Common.Interfaces;
 using Application.Common.Models;

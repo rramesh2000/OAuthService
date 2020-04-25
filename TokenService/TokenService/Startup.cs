@@ -19,7 +19,9 @@ namespace TokenService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddControllers();
+
+            services.AddControllers(); 
+            services.AddControllers().AddNewtonsoftJson();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSwaggerDocument(config =>
             {

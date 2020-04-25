@@ -1,14 +1,16 @@
 ﻿using Domain.Enums;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
+
 
 namespace Application.Common.Models
 {
     public class AuthorizationGrantRequestDTO
     {
+        [JsonConverter(typeof(StringEnumConverter))]
         public AuthorizationGrantType Grant_Type { get; set; }
-        public Guid Client_Id { get; set; }    
+        public Guid Client_Id { get; set; }
         public string Redirect_Uri { get; set; }
         public string Scope { get; set; }
         public string State { get; set; }
