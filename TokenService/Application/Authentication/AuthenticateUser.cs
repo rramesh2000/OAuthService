@@ -25,6 +25,7 @@ namespace Application.Authentication
             AuthenticationDTO auth = new AuthenticationDTO();
             try
             {
+                //Authorize authorize = oauth.Authorize.Where(x => x.Code == refauth.Authorization).FirstOrDefault();
                 UserLogin userLogin = new UserLogin(config, Log, JWTTokenService, oauth, EncryptSvc);
                 UserDTO userDTO = new UserDTO { UserName = authorizationGrantRequest.UserName, password = authorizationGrantRequest.Password, Grant_Type = authorizationGrantRequest.Grant_Type };
                 UserDTO userLoginDTO = userLogin.Login(userDTO);
@@ -42,14 +43,15 @@ namespace Application.Authentication
 
 
 
-        private string GetRefreshToken(string username)
+        private string GetRefreshToken(string Code)
         {
             string refresh_token = JWTTokenService.GenerateRefreshToken();
-            User user = oauth.User.SingleOrDefault(x => x.UserName == username);
-            user.RefreshToken = refresh_token;
+            Authorize authorize = oauth.Authorize.SingleOrDefault(x => x.Code == Code);
+            authorize.Code = refresh_token;
             oauth.SaveChanges();
             return refresh_token;
         }
+
 
     }
 }

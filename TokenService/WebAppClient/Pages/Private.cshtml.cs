@@ -28,7 +28,7 @@ namespace WebAppClient.Pages
             authorization.Code = HttpUtility.UrlDecode(code);
             authorization.State = state;
             authorization.access_token = access_token;
-            authorization.refresh_token = refresh_token;
+            authorization.refresh_token = HttpUtility.UrlDecode(refresh_token);
         }
         public async Task<IActionResult> OnPostCodeAsync()
         {

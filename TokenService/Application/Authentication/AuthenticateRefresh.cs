@@ -25,11 +25,12 @@ namespace Application.Authentication
             try
             {
                 ValidationResult results = refreshvalidation.Validate(refauth);
-                User user = oauth.User.Where(x => x.RefreshToken == refauth.Authorization).FirstOrDefault();
-                UserDTO userLoginDTO = mapper.Map<UserDTO>(user);
+                Authorize authorize  = oauth.Authorize.Where(x => x.Code == refauth.Authorization).FirstOrDefault();
+                User user = oauth.User.SingleOrDefault(x => x.UserId == authorize.UserId);
+                UserDTO userDTO = mapper.Map<UserDTO>(user);
                 auth.token_type = config["TokenType"];
-                auth.access_token = JWTTokenService.GenerateAccessToken(userLoginDTO);
-                auth.refresh_token = HttpUtility.UrlEncode(GetRefreshToken(user.UserName));
+                auth.access_token = JWTTokenService.GenerateAccessToken(userDTO);
+                auth.refresh_token = HttpUtility.UrlEncode(GetRefreshToken(authorize.Code));
             }
             catch (Exception ex)
             {
@@ -39,11 +40,11 @@ namespace Application.Authentication
             return auth;
         }
 
-        private string GetRefreshToken(string username)
+        private string GetRefreshToken(string Code)
         {
             string refresh_token = JWTTokenService.GenerateRefreshToken();
-            User user = oauth.User.SingleOrDefault(x => x.UserName == username);
-            user.RefreshToken = refresh_token;
+            Authorize authorize = oauth.Authorize.SingleOrDefault(x => x.Code == Code);
+            authorize.Code = refresh_token;
             oauth.SaveChanges();
             return refresh_token;
         }
