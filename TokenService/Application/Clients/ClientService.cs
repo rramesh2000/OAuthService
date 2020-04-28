@@ -18,7 +18,7 @@ namespace Application.Clients
             ClientDTO clientDTO = new ClientDTO();
             try
             {
-               Client client = oauth.Client.SingleOrDefault(x => x.Client_Id == Client_Id);
+                Client client = oauth.Client.SingleOrDefault(x => x.Client_Id == Client_Id);
                 clientDTO = mapper.Map<ClientDTO>(client);
             }
             catch { }

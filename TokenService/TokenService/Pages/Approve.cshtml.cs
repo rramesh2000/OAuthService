@@ -22,11 +22,11 @@ namespace TokenService.Pages
         public AuthorizationRequestDTO authorizationRequestDTO { get; set; }
         public void OnGet(AuthorizationGrantType Response_Type, string Client_Id, string Redirect_Uri, string Scope, string State)
         {
-          ClientService clientService = new ClientService(configuration,
-                    itsLogger,
-                    JWTTokenService,
-                    OAuthDbContext,
-                    EncryptionService);
+            ClientService clientService = new ClientService(configuration,
+                      itsLogger,
+                      JWTTokenService,
+                      OAuthDbContext,
+                      EncryptionService);
             authorizationRequestDTO = new AuthorizationRequestDTO
             {
                 Response_Type = Response_Type,

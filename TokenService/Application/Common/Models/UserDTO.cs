@@ -18,7 +18,7 @@ namespace Application.Common.Models
         public string HashPassword { get; set; }
         [IgnoreDataMember]
         public string RefreshToken { get; set; }
-        public bool IsAuthenticated { get;  set; }
+        public bool IsAuthenticated { get; set; }
 
         public UserDTO()
         {

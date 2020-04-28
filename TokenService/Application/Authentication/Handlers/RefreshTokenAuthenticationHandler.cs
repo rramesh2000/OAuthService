@@ -15,13 +15,12 @@ namespace Application.Authentication.Handlers
         public EncryptionService encryptionService { get; private set; }
 
         public override void Handle(RevocationDTO revoke)
-        {            
-            if (revoke.refresh.Authorization!=revoke.user.RefreshToken)
+        {
+            if (revoke.refresh.Authorization != revoke.user.RefreshToken)
             {
                 throw new InvalidTokenException(TokenConstants.InvalidToken);
             }
             base.Handle(revoke);
         }
-
     }
 }

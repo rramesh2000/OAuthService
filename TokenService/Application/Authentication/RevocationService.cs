@@ -8,6 +8,7 @@ using FluentValidation.Results;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
+using System.Web;
 
 namespace Application.Authentication
 {
@@ -22,15 +23,15 @@ namespace Application.Authentication
             {
                 ValidationResult results1 = userloginvalidation.Validate(revocationDTO.user);
                 ValidationResult results2 = refreshvalidation.Validate(revocationDTO.refresh);
+ 
+                string refresh_token = HttpUtility.UrlDecode(revocationDTO.token);
 
-                User user = oauth.User.Where(x => x.UserName == revocationDTO.user.UserName).FirstOrDefault();
+                Authorize authorize = oauth.Authorize.SingleOrDefault(x => x.Code == refresh_token);
+                User user = oauth.User.Where(x => x.UserId == authorize.UserId).FirstOrDefault();
                 UserDTO userLoginDTO = mapper.Map<UserDTO>(user);
-                userLoginDTO.password = revocationDTO.user.password;
-
                 //Check user is authenticated
                 var handler = new UserAuthenticationHandler();
                 handler.Handle(userLoginDTO);
-
                 revocationDTO.user = userLoginDTO;
 
                 //Check refresh token provided is real
@@ -38,7 +39,7 @@ namespace Application.Authentication
                 refreshhandler.Handle(revocationDTO);
 
                 //Set the refresh token to null
-                user.RefreshToken = null;
+                authorize.Code = null;
                 oauth.SaveChanges();
                 return TokenConstants.RevokedToken;
             }

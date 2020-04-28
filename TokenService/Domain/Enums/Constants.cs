@@ -7,7 +7,7 @@
         public const string ValidToken = "Valid Token";
         public const string CannotCreateUser = "Cannot create User";
         public const string InvalidClient = "Invalid Client";
-        public const string RevokedToken =  "Revoked token";
+        public const string RevokedToken = "Revoked token";
         public const string CannotCreateClient = "Cannot create Client";
     }
 }

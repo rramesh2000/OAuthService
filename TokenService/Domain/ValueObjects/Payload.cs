@@ -31,10 +31,10 @@
 
 
         #region Private claims
-     
+
         public string username { get; set; }
-    
-        public bool admin { get; set; } 
+
+        public bool admin { get; set; }
         #endregion
 
 

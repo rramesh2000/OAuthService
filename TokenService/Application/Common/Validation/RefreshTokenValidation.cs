@@ -7,7 +7,7 @@ namespace Application.Common.Validation
     {
         public RefreshTokenValidation()
         {
-            RuleFor(token => token.Authorization).NotEmpty().NotNull();            
+            RuleFor(token => token.Authorization).NotEmpty().NotNull();
         }
     }
 }

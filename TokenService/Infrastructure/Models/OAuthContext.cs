@@ -1,8 +1,6 @@
-﻿using System;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Infrastructure.Models
 {
@@ -24,7 +22,7 @@ namespace Infrastructure.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
- 
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -8,7 +8,7 @@ namespace Application.TokenValidation.Handlers
     public class TokenRevocationHandler : Handler<ResponseDTO>
     {
         public override void Handle(ResponseDTO auth)
-        {           
+        {
             if (0 != 0)
             {
                 throw new InvalidTokenException(TokenConstants.InvalidToken);

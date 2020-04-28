@@ -15,6 +15,6 @@ namespace Application.Common.Exceptions
         {
         }
 
-      
+
     }
 }

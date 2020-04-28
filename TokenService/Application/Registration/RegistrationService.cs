@@ -1,13 +1,6 @@
-﻿using Application.Common.Behaviours;
-using Application.Common.Exceptions;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Application.Common.Models;
-using Domain.Entities;
-using Domain.Enums;
-using FluentValidation.Results;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Linq;
 
 namespace Application.Registration
 {
@@ -28,7 +21,8 @@ namespace Application.Registration
             return registerClient.SaveClient(clientDTO);
         }
 
-        public UserDTO SaveUser(UserDTO userdto) {
+        public UserDTO SaveUser(UserDTO userdto)
+        {
             return registerUser.SaveUser(userdto);
         }
     }

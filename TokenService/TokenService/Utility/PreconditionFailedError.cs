@@ -2,7 +2,7 @@
 
 namespace TokenService.Utility
 {
-    public class PreconditionFailedError: ApiError
+    public class PreconditionFailedError : ApiError
     {
         public PreconditionFailedError()
             : base(404, HttpStatusCode.NotFound.ToString())

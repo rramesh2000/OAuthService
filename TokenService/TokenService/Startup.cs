@@ -20,7 +20,7 @@ namespace TokenService
         {
             services.AddRazorPages();
 
-            services.AddControllers(); 
+            services.AddControllers();
             services.AddControllers().AddNewtonsoftJson();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSwaggerDocument(config =>
@@ -34,11 +34,11 @@ namespace TokenService
                     document.Info.Contact = new NSwag.OpenApiContact
                     {
                         Name = "Ritesh Ramesh",
-                        Email = string.Empty 
+                        Email = string.Empty
                     };
                     document.Info.License = new NSwag.OpenApiLicense
                     {
-                        Name = "Use under MIT" 
+                        Name = "Use under MIT"
                     };
                 };
             });
@@ -55,7 +55,7 @@ namespace TokenService
             // Handles non-success status codes with empty body
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
-            app.UseHttpsRedirection(); 
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -67,7 +67,7 @@ namespace TokenService
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
             });
- 
+
         }
     }
 }

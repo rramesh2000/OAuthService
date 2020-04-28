@@ -19,7 +19,7 @@ namespace Domain.Entities
             UserName = username;
         }
 
-     
- 
+
+
     }
 }

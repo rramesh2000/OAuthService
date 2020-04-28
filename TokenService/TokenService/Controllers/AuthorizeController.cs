@@ -2,7 +2,6 @@
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -19,7 +18,7 @@ namespace TokenService.Controllers
         }
 
         [HttpGet]
-       
+
         public IActionResult Get([FromQuery] AuthorizationRequestDTO authorizeDTO)
         {
             AuthorizationResponseDTO authResponseDTO = new AuthorizationResponseDTO();
@@ -46,7 +45,7 @@ namespace TokenService.Controllers
                 return Unauthorized(new UnauthorizedError(ex.Message));
             }
             return Ok(authResponseDTO);
-          
+
         }
 
     }

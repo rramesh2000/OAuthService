@@ -4,6 +4,6 @@ namespace Application.Common.Interfaces
 {
     public interface IAuthenticationService
     {
-          AuthenticationDTO Authenticate(AuthorizationGrantRequestDTO token);
+        AuthenticationDTO Authenticate(AuthorizationGrantRequestDTO token);
     }
 }

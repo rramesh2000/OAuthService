@@ -1,5 +1,4 @@
-﻿using Application;
-using Application.Authentication;
+﻿using Application.Authentication;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
@@ -19,10 +18,10 @@ namespace TokenService.Controllers
         {
         }
 
- 
+
 
         [HttpPost]
- 
+
         [Route("/api/token")]
         public IActionResult Post(AuthorizationGrantRequestDTO token)
         {

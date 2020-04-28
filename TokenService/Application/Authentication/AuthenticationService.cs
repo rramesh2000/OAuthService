@@ -14,9 +14,9 @@ namespace Application.Authentication
         public string SecretKey { get; set; }
         public AuthenticationService(IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(configuration, log, jWTTokenService, oauth, encryptSvc)
         {
-            
+
         }
- 
+
 
         public AuthenticationDTO Authenticate(AuthorizationGrantRequestDTO token)
         {
@@ -24,7 +24,7 @@ namespace Application.Authentication
             switch (token.Grant_Type)
             {
                 case AuthorizationGrantType.authorization_code:
-                    authenticate = new AuthenticateCode(config,Log, JWTTokenService, oauth,EncryptSvc);
+                    authenticate = new AuthenticateCode(config, Log, JWTTokenService, oauth, EncryptSvc);
                     break;
                 case AuthorizationGrantType.refresh_token:
                     authenticate = new AuthenticateRefresh(config, Log, JWTTokenService, oauth, EncryptSvc);
@@ -33,10 +33,10 @@ namespace Application.Authentication
                     authenticate = new AuthenticateUser(config, Log, JWTTokenService, oauth, EncryptSvc);
                     break;
                 default:
-                    authenticate = new AuthenticateCode(config, Log, JWTTokenService, oauth, EncryptSvc);                    
+                    authenticate = new AuthenticateCode(config, Log, JWTTokenService, oauth, EncryptSvc);
                     break;
             }
-            return authenticate.AuthenticateGetToken(token);           
+            return authenticate.AuthenticateGetToken(token);
         }
     }
 }

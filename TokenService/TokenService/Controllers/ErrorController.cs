@@ -1,5 +1,5 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using TokenService.Utility;
 
 namespace TokenService.Controllers

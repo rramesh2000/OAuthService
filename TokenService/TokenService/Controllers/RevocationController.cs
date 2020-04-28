@@ -31,7 +31,7 @@ namespace TokenService.Controllers
                     JWTTokenService,
                     OAuthDbContext,
                     EncryptionService);
-               tmp =   rs.TokenRevocation(revoke);
+                tmp = rs.TokenRevocation(revoke);
             }
             catch (InvalidTokenException exToken)
             {

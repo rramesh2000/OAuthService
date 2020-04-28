@@ -4,7 +4,7 @@ using Domain.Entities;
 
 namespace Application.Common.Mapper
 {
-    public class ClientProfile: Profile
+    public class ClientProfile : Profile
     {
         public ClientProfile()
         {

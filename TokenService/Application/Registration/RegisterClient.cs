@@ -1,5 +1,4 @@
-﻿using Application.Common.Behaviours;
-using Application.Common.Exceptions;
+﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Domain.Entities;
@@ -21,10 +20,10 @@ namespace Application.Registration
         {
             try
             {
-                ValidationResult results = clientvalidation.Validate(clientdto);  
+                ValidationResult results = clientvalidation.Validate(clientdto);
                 if (!results.IsValid)
-                {                    
-                    string failures = String.Empty;
+                {
+                    string failures = string.Empty;
                     //TODO: Use projection and remove the for loop 
                     foreach (var failure in results.Errors)
                     {
@@ -36,7 +35,7 @@ namespace Application.Registration
                 {
                     Client client = mapper.Map<Client>(clientdto);
                     client.Client_Id = Guid.NewGuid();
-                     client.Client_Secret = EncryptSvc.GetSalt(); 
+                    client.Client_Secret = EncryptSvc.GetSalt();
                     if (oauth.Client.Where(x => x.Client_Id == client.Client_Id).Count() < 1)
                     {
                         oauth.Client.Add(client);

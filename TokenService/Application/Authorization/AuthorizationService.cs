@@ -4,7 +4,6 @@ using Application.Common.Models;
 using Domain.Entities;
 using Domain.Enums;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Linq;
 using System.Web;
 
@@ -21,7 +20,7 @@ namespace Application.Authorization
         {
             AuthorizationResponseDTO authResponseDTO = new AuthorizationResponseDTO();
             try
-            {              
+            {
                 Authorize authorize = mapper.Map<Authorize>(authorizeDTO);
                 Client client = oauth.Client.SingleOrDefault(x => x.Client_Id == authorizeDTO.Client_Id);
                 if (client.Client_Id != authorizeDTO.Client_Id) { throw new InvalidClientException(TokenConstants.InvalidClient); }
@@ -32,11 +31,12 @@ namespace Application.Authorization
                 authResponseDTO.State = authorizeDTO.State;
                 authResponseDTO.Redirect_Uri = authorizeDTO.Redirect_Uri;
             }
-            catch {
-                
+            catch
+            {
+
             }
             return authResponseDTO;
         }
-         
+
     }
 }
