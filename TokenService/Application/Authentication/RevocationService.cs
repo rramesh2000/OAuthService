@@ -14,7 +14,7 @@ namespace Application.Authentication
 {
     public class RevocationService : BaseService, IRevocationService
     {
-        public RevocationService(IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(configuration, log, jWTTokenService, oauth, encryptSvc)
+        public RevocationService(ITokenService refreshtoken, IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(refreshtoken, configuration, log, jWTTokenService, oauth, encryptSvc)
         {
         }
         public string TokenRevocation(RevocationDTO revocationDTO)
@@ -23,7 +23,7 @@ namespace Application.Authentication
             {
                 ValidationResult results1 = userloginvalidation.Validate(revocationDTO.user);
                 ValidationResult results2 = refreshvalidation.Validate(revocationDTO.refresh);
- 
+
                 string refresh_token = HttpUtility.UrlDecode(revocationDTO.token);
 
                 Authorize authorize = oauth.Authorize.SingleOrDefault(x => x.Code == refresh_token);

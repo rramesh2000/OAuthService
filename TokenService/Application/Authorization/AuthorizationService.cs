@@ -11,7 +11,7 @@ namespace Application.Authorization
 {
     public class AuthorizationService : BaseService, IAuthorizationService
     {
-        public AuthorizationService(IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(configuration, log, jWTTokenService, oauth, encryptSvc)
+        public AuthorizationService(ITokenService refreshtoken, IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(refreshtoken, configuration, log, jWTTokenService, oauth, encryptSvc)
         {
 
         }
@@ -24,7 +24,7 @@ namespace Application.Authorization
                 Authorize authorize = mapper.Map<Authorize>(authorizeDTO);
                 Client client = oauth.Client.SingleOrDefault(x => x.Client_Id == authorizeDTO.Client_Id);
                 if (client.Client_Id != authorizeDTO.Client_Id) { throw new InvalidClientException(TokenConstants.InvalidClient); }
-                authorize.Code = JWTTokenService.GenerateRefreshToken();
+                authorize.Code = refreshtoken.GenerateToken(new TokenDTO { New = true });
                 oauth.Authorize.Add(authorize);
                 oauth.SaveChanges();
                 authResponseDTO.Code = HttpUtility.UrlEncode(authorize.Code);

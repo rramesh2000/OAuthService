@@ -10,7 +10,7 @@ namespace Application.TokenValidation
 {
     public class TokenValidationService : BaseService
     {
-        public TokenValidationService(IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(configuration, log, jWTTokenService, oauth, encryptSvc)
+        public TokenValidationService(ITokenService refreshtoken, IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(refreshtoken, configuration, log, jWTTokenService, oauth, encryptSvc)
         {
         }
 
@@ -19,7 +19,7 @@ namespace Application.TokenValidation
             try
             {
                 string SecretKey = config["Secretkey"];
-                ResponseDTO authorizationVm = new ResponseDTO(auth.Authorization, false, SecretKey, JWTTokenService);
+                ResponseDTO authorizationVm = new ResponseDTO(auth.Authorization, false, SecretKey, JWTToken);
                 var handler = new TokenVerificationHandler();
                 handler.SetNext(new TokenTimeVerificationHandler()).SetNext(new TokenRevocationHandler());
                 handler.Handle(authorizationVm);

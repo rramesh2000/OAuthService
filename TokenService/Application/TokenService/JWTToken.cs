@@ -5,19 +5,18 @@ using Domain.Enums;
 using Domain.ValueObjects;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Security.Cryptography;
 using System.Text.Json;
 namespace Application.JWT
 {
 
-    public class JWTTokenService : ITokenService
+    public class JWTToken : ITokenService
     {
         public string SecretKey { get; set; }
         public string algorithm { get; set; }
         public IEncryptionService EncryptSvc { get; set; }
         public IConfiguration config { get; set; }
 
-        public JWTTokenService(ITSLogger log, IEncryptionService encryptSvc, IConfiguration configuration)
+        public JWTToken(ITSLogger log, IEncryptionService encryptSvc, IConfiguration configuration)
         {
             EncryptSvc = encryptSvc;
             config = configuration;
@@ -25,7 +24,7 @@ namespace Application.JWT
             algorithm = config.GetValue<string>("jwt:header:alg");
         }
 
-        public string GenerateAccessToken(UserDTO user)
+        public string GenerateToken(TokenDTO tokenDTO)
         {
             int tokenExpiery = int.Parse(config["AccessTokenLife"]);
             Header header = new Header
@@ -37,19 +36,13 @@ namespace Application.JWT
             Payload payload = new Payload
             {
                 iss = config.GetValue<string>("jwt:payload:iss"),
-                sub = user.UserName,
+                sub = tokenDTO.UserName,
                 exp = new TimeSpan(0, 0, tokenExpiery, 0, 0).TotalSeconds.ToString(),
                 iat = DateTime.Now.ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'"),
                 nbf = DateTime.Now.AddMinutes(tokenExpiery).ToUniversalTime().ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'"),
                 jti = Guid.NewGuid().ToString(),
-                username = user.UserName,
+                username = tokenDTO.UserName,
                 admin = true
-            };
-
-            JWTToken token = new JWTToken
-            {
-                _header = header,
-                _payload = payload
             };
 
             string headerStr = JsonSerializer.Serialize(header);
@@ -59,16 +52,7 @@ namespace Application.JWT
             return tokenStr;
         }
 
-        public string GenerateRefreshToken()
-        {
-            var randomNumber = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
-            }
-        }
-        public bool VerifyAccessToken(string token)
+        public bool VerifyToken(string token)
         {
             bool tmpBool = false;
             string[] arr = token.Split('.');
@@ -83,7 +67,7 @@ namespace Application.JWT
             return tmpBool;
         }
 
-        public bool VerifyAccessTokenTime(string token)
+        public bool VerifyTokenTime(string token)
         {
             bool tmpBool = false;
             string[] arr = token.Split('.');

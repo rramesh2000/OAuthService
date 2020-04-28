@@ -6,6 +6,6 @@ namespace Application.Common.Interfaces
     {
         string SecretKey { get; set; }
 
-        AuthenticationDTO AuthenticateGetToken(AuthorizationGrantRequestDTO userLogin);
+        AuthenticationDTO AuthenticateGetToken(TokenDTO tokenDTO);
     }
 }

@@ -14,29 +14,31 @@ namespace Application.Common.Interfaces
         public ITSLogger Log { get; set; }
         public UserLoginValidation userloginvalidation { get; set; }
         public RefreshTokenValidation refreshvalidation { get; set; }
-        public ITokenService JWTTokenService { get; set; }
+        public ITokenService refreshtoken { get; set; }
+        public ITokenService JWTToken { get; set; }
         public IEncryptionService EncryptSvc { get; set; }
         public UserValidation uservalidation { get; set; }
         public ClientValidation clientvalidation { get; set; }
         public ITokenServiceDbContext oauth { get; set; }
 
-        public BaseService(IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc)
+        public BaseService(ITokenService refreshtoken, IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc)
         {
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<UserProfile>();
                 cfg.AddProfile<ClientProfile>();
                 cfg.AddProfile<AuthorizeProfile>();
+                cfg.AddProfile<TokenProfile>();
             });
 
             mapper = config.CreateMapper();
             Log = log;
             userloginvalidation = new UserLoginValidation();
-            refreshvalidation = new RefreshTokenValidation();
             uservalidation = new UserValidation();
             clientvalidation = new ClientValidation();
             this.config = configuration;
-            this.JWTTokenService = jWTTokenService;
+            this.JWTToken = jWTTokenService;
+            this.refreshtoken = refreshtoken;
             this.oauth = oauth;
             this.EncryptSvc = encryptSvc;
         }

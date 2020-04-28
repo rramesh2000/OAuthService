@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using System;
 using System.Web;
+using RefreshToken = Application.Authentication.RefreshToken;
 
 namespace NUnitTestApplication
 {
@@ -19,6 +20,7 @@ namespace NUnitTestApplication
     {
         private IConfiguration configuration;
         private ITokenServiceDbContext context { get; set; }
+        private ITokenService refreshtoken { get; set; }
 
         [SetUp]
         public void Setup()
@@ -41,7 +43,7 @@ namespace NUnitTestApplication
         {
             ITSLogger log = new TSLogger();
             UserDTO userDTO = new UserDTO { UserName = "ronald", password = "test26832549658" };
-            UserLogin userLogin = new UserLogin(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+            UserLogin userLogin = new UserLogin(new RefreshToken(), configuration, log, new JWTToken(log, new EncryptionService(), configuration), context, new EncryptionService());
             userDTO = userLogin.Login(userDTO);
             Assert.AreEqual(userDTO.HashPassword, "iO27OOseTcQsdEbch+UgOqRWGy80o7aZNit80EwggYgJ4f3vfFkMxmk5DKn6OooyiEEUY+YW5pr/9utIb6OR3Z7cFc40ikafRrhQ3sHE1OCM83C4Wxjcffwf721gKLCfJ/vF9AB4KWp/KasDBztCExyAmarZnoKlehZ60iMAlEK/Kgx3J4VualLR+X1gk1bpdP/jNZ1ZVFgxq6b5RR6zeJ1Lf5E+BV2ntO2yv7/67/FdXnqL1kivcoxGxX05TgPd8pSQnVc/As+8S5bQXWmandFkJatkGWQc70edq1qoF80KbARqMWXWJvd2tt+ZfytPuuFga7XU5suwMhTb3s9MUw==");
         }
@@ -63,9 +65,10 @@ namespace NUnitTestApplication
                 Refresh_Token = null,
                 State = null
             };
-            IAuthenticationService tm = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+
+            IAuthenticationService tm = new AuthenticationService(new RefreshToken(), configuration, log, new JWTToken(log, new EncryptionService(), configuration), context, new EncryptionService());
             accessDTO.Authorization = accessDTO.Authorization = tm.Authenticate(authorizationGrantRequestDTO).access_token;
-            TokenValidationService tokenValidationService = new TokenValidationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+            TokenValidationService tokenValidationService = new TokenValidationService(new RefreshToken(), configuration, log, new JWTToken(log, new EncryptionService(), configuration), context, new EncryptionService());
             Assert.AreEqual(TokenConstants.ValidToken, tokenValidationService.VerifyToken(accessDTO));
         }
 
@@ -86,9 +89,9 @@ namespace NUnitTestApplication
                 Refresh_Token = HttpUtility.UrlEncode("pgsoAvSXD3xYPV+/pSAe3khYZWOFidHPxpltwNDP4Xw="),
                 State = null
             };
-            IAuthenticationService tm = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+            IAuthenticationService tm = new AuthenticationService(new RefreshToken(), configuration, log, new JWTToken(log, new EncryptionService(), configuration), context, new EncryptionService());
             accessDTO.Authorization = accessDTO.Authorization = tm.Authenticate(authorizationGrantRequestDTO).access_token;
-            TokenValidationService tokenValidationService = new TokenValidationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+            TokenValidationService tokenValidationService = new TokenValidationService(new RefreshToken(), configuration, log, new JWTToken(log, new EncryptionService(), configuration), context, new EncryptionService());
             Assert.AreEqual(TokenConstants.ValidToken, tokenValidationService.VerifyToken(accessDTO));
         }
     }

@@ -28,10 +28,10 @@ namespace TokenService.Controllers
             AuthenticationDTO Authorization = new AuthenticationDTO();
             try
             {
-                IAuthenticationService tm = new AuthenticationService(
+                IAuthenticationService tm = new AuthenticationService(RefreshToken,
                     configuration,
                     itsLogger,
-                    JWTTokenService,
+                    JWTToken,
                     OAuthDbContext,
                     EncryptionService);
                 Authorization = tm.Authenticate(token);
@@ -56,9 +56,10 @@ namespace TokenService.Controllers
             try
             {
                 TokenValidationService tm = new TokenValidationService(
+                    RefreshToken,
                     configuration,
                     itsLogger,
-                    JWTTokenService,
+                    JWTToken,
                     OAuthDbContext,
                     EncryptionService);
                 tmp = tm.VerifyToken(auth);

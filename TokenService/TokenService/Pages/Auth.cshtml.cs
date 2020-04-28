@@ -20,9 +20,10 @@ namespace TokenService.Pages
         public AuthorizationRequestDTO authorizationRequestDTO { get; set; }
         public void OnGet(string Response_Type, string Client_Id, string Redirect_Uri, string Scope, string State)
         {
-            ClientService clientService = new ClientService(configuration,
+            ClientService clientService = new ClientService(refToken,
+                configuration,
                     itsLogger,
-                    JWTTokenService,
+                    jwtToken,
                     OAuthDbContext,
                     EncryptionService);
             authorizationRequestDTO = new AuthorizationRequestDTO
@@ -43,10 +44,10 @@ namespace TokenService.Pages
                 return Page();
             }
 
-            UserLogin userLogin = new UserLogin(
+            UserLogin userLogin = new UserLogin(refToken,
                     configuration,
                     itsLogger,
-                    JWTTokenService,
+                    jwtToken,
                     OAuthDbContext,
                     EncryptionService);
             UserDTO userDTO = userLogin.Login(user);

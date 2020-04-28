@@ -1,4 +1,5 @@
-﻿using Application.Common.Behaviours;
+﻿using Application.Authentication;
+using Application.Common.Behaviours;
 using Application.Common.Interfaces;
 using Application.JWT;
 using Infrastructure.Logging;
@@ -15,7 +16,8 @@ namespace TokenService.Controllers
     {
         public IConfiguration configuration;
         public ITSLogger itsLogger { get; set; }
-        public ITokenService JWTTokenService { get; set; }
+        public ITokenService RefreshToken { get; set; }
+        public ITokenService JWTToken { get; set; }
         public ITokenServiceDbContext OAuthDbContext { get; set; }
         public IEncryptionService EncryptionService { get; set; }
         public BaseController(IConfiguration configuration)
@@ -26,7 +28,8 @@ namespace TokenService.Controllers
             var optionsBuilder = new DbContextOptionsBuilder<OAuthContext>();
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("OAuthDatabase"));
             OAuthDbContext = new OAuthContext(optionsBuilder.Options);
-            JWTTokenService = new JWTTokenService(itsLogger, EncryptionService, this.configuration);
+            JWTToken = new JWTToken(itsLogger, EncryptionService, this.configuration);
+            RefreshToken = new RefreshToken();
         }
     }
 }

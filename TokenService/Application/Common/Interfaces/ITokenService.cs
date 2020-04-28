@@ -4,9 +4,11 @@ namespace Application.Common.Interfaces
 {
     public interface ITokenService
     {
-        string GenerateAccessToken(UserDTO user);
-        string GenerateRefreshToken();
-        bool VerifyAccessToken(string token);
-        bool VerifyAccessTokenTime(string token);
+
+        string GenerateToken(TokenDTO tokenDTO);
+
+        bool VerifyToken(string token);
+
+        bool VerifyTokenTime(string token);
     }
 }

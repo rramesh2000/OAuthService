@@ -10,10 +10,10 @@ namespace Application.Registration
 
         public RegisterClient registerClient { get; set; }
 
-        public RegistrationService(IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(configuration, log, jWTTokenService, oauth, encryptSvc)
+        public RegistrationService(ITokenService refreshtoken, IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(refreshtoken, configuration, log, jWTTokenService, oauth, encryptSvc)
         {
-            registerUser = new RegisterUser(configuration, log, jWTTokenService, oauth, encryptSvc);
-            registerClient = new RegisterClient(configuration, log, jWTTokenService, oauth, encryptSvc);
+            registerUser = new RegisterUser(refreshtoken, configuration, log, jWTTokenService, oauth, encryptSvc);
+            registerClient = new RegisterClient(refreshtoken, configuration, log, jWTTokenService, oauth, encryptSvc);
         }
 
         public ClientDTO SaveClient(ClientDTO clientDTO)

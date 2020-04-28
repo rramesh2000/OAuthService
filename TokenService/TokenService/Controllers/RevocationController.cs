@@ -25,10 +25,10 @@ namespace TokenService.Controllers
             string tmp = string.Empty;
             try
             {
-                IRevocationService rs = new RevocationService(
+                IRevocationService rs = new RevocationService(RefreshToken,
                     configuration,
                     itsLogger,
-                    JWTTokenService,
+                    JWTToken,
                     OAuthDbContext,
                     EncryptionService);
                 tmp = rs.TokenRevocation(revoke);

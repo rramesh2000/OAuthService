@@ -22,21 +22,21 @@ namespace NUnitTestApplication
             itsLogger = new TSLogger();
             encryptSvc = new EncryptionService();
             configuration = TestHelper.GetIConfigurationRoot(TestContext.CurrentContext.TestDirectory);
-            jWTTokenService = new JWTTokenService(itsLogger, encryptSvc, configuration);
+            jWTTokenService = new JWTToken(itsLogger, encryptSvc, configuration);
         }
 
         [Test]
         public void TestVerifyToken()
         {
             UserDTO use = new UserDTO { UserName = "rramesh", Salt = "z1GRw9XD6tYT10qMqKf0cO7rPcsvkVllugZittGCL0Y=", HashPassword = "", UserId = Guid.NewGuid() };
-            Assert.IsTrue(jWTTokenService.VerifyAccessToken(jWTTokenService.GenerateAccessToken(use)));
+            Assert.IsTrue(jWTTokenService.VerifyToken(jWTTokenService.GenerateToken(use)));
         }
 
         [Test]
         public void TestVerifyTokenTime()
         {
             UserDTO use = new UserDTO { UserName = "rramesh", Salt = "z1GRw9XD6tYT10qMqKf0cO7rPcsvkVllugZittGCL0Y=", HashPassword = "", UserId = Guid.NewGuid() };
-            Assert.IsTrue(jWTTokenService.VerifyAccessTokenTime(jWTTokenService.GenerateAccessToken(use)));
+            Assert.IsTrue(jWTTokenService.VerifyTokenTime(jWTTokenService.GenerateToken(use)));
         }
 
     }

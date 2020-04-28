@@ -23,7 +23,7 @@ namespace TokenService.Controllers
         {
             try
             {
-                RegistrationService registrationService = new RegistrationService(configuration, itsLogger, JWTTokenService, OAuthDbContext, EncryptionService);
+                RegistrationService registrationService = new RegistrationService(RefreshToken, configuration, itsLogger, JWTToken, OAuthDbContext, EncryptionService);
                 user = registrationService.SaveUser(user);
             }
             catch (InvalidUserException exUser)
@@ -44,7 +44,7 @@ namespace TokenService.Controllers
         {
             try
             {
-                RegistrationService registrationService = new RegistrationService(configuration, itsLogger, JWTTokenService, OAuthDbContext, EncryptionService);
+                RegistrationService registrationService = new RegistrationService(RefreshToken, configuration, itsLogger, JWTToken, OAuthDbContext, EncryptionService);
                 client = registrationService.SaveClient(client);
             }
             catch (InvalidUserException exUser)

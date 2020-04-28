@@ -24,10 +24,10 @@ namespace TokenService.Controllers
             AuthorizationResponseDTO authResponseDTO = new AuthorizationResponseDTO();
             try
             {
-                IAuthorizationService authorizationService = new AuthorizationService(
+                IAuthorizationService authorizationService = new AuthorizationService(RefreshToken,
                     configuration,
                     itsLogger,
-                    JWTTokenService,
+                    JWTToken,
                     OAuthDbContext,
                     EncryptionService);
                 authResponseDTO = authorizationService.GetAuthorization(authorizeDTO);

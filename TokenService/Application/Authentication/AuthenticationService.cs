@@ -12,31 +12,34 @@ namespace Application.Authentication
         public AuthenticateRefresh authenticateRefresh { get; set; }
 
         public string SecretKey { get; set; }
-        public AuthenticationService(IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(configuration, log, jWTTokenService, oauth, encryptSvc)
+        public AuthenticationService(ITokenService refreshtoken, IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(refreshtoken, configuration, log, jWTTokenService, oauth, encryptSvc)
         {
 
         }
 
 
-        public AuthenticationDTO Authenticate(AuthorizationGrantRequestDTO token)
+        public AuthenticationDTO Authenticate(AuthorizationGrantRequestDTO authorizationGrantRequestDTO)
         {
             IAuthenticate authenticate;
-            switch (token.Grant_Type)
+
+            switch (authorizationGrantRequestDTO.Grant_Type)
             {
                 case AuthorizationGrantType.authorization_code:
-                    authenticate = new AuthenticateCode(config, Log, JWTTokenService, oauth, EncryptSvc);
+                    authenticate = new AuthenticateCode(refreshtoken, config, Log, JWTToken, oauth, EncryptSvc);
                     break;
                 case AuthorizationGrantType.refresh_token:
-                    authenticate = new AuthenticateRefresh(config, Log, JWTTokenService, oauth, EncryptSvc);
+                    authenticate = new AuthenticateRefresh(refreshtoken, config, Log, JWTToken, oauth, EncryptSvc);
                     break;
                 case AuthorizationGrantType.password:
-                    authenticate = new AuthenticateUser(config, Log, JWTTokenService, oauth, EncryptSvc);
+                    authenticate = new AuthenticateUser(refreshtoken, config, Log, JWTToken, oauth, EncryptSvc);
                     break;
                 default:
-                    authenticate = new AuthenticateCode(config, Log, JWTTokenService, oauth, EncryptSvc);
+                    authenticate = new AuthenticateCode(refreshtoken, config, Log, JWTToken, oauth, EncryptSvc);
                     break;
             }
-            return authenticate.AuthenticateGetToken(token);
+
+            TokenDTO tokenDTO = mapper.Map<TokenDTO>(authorizationGrantRequestDTO);
+            return authenticate.AuthenticateGetToken(tokenDTO);
         }
     }
 }

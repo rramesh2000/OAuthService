@@ -52,9 +52,9 @@ namespace NUnitTestApplication
                 Refresh_Token = null,
                 State = null
             };
-            IAuthenticationService tm = new AuthenticationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+            IAuthenticationService tm = new AuthenticationService(configuration, log, new JWTToken(log, new EncryptionService(), configuration), context, new EncryptionService());
             accessDTO.Authorization = accessDTO.Authorization = tm.Authenticate(authorizationGrantRequestDTO).access_token;
-            TokenValidationService tv = new TokenValidationService(configuration, log, new JWTTokenService(log, new EncryptionService(), configuration), context, new EncryptionService());
+            TokenValidationService tv = new TokenValidationService(configuration, log, new JWTToken(log, new EncryptionService(), configuration), context, new EncryptionService());
             string result = tv.VerifyToken(accessDTO);
             Assert.AreEqual(result, TokenConstants.ValidToken);
         }

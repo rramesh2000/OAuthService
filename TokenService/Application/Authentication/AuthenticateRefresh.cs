@@ -14,30 +14,29 @@ namespace Application.Authentication
     public class AuthenticateRefresh : BaseService, IAuthenticate
     {
         public string SecretKey { get; set; }
-        RefreshToken refreshtoken { get; set; }
-        public AuthenticateRefresh(RefreshToken refreshtoken, IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(configuration, log, jWTTokenService, oauth, encryptSvc)
+
+        public AuthenticateRefresh(ITokenService refreshtoken, IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(refreshtoken, configuration, log, jWTTokenService, oauth, encryptSvc)
         {
-            this.refreshtoken = refreshtoken;
-            if (this.refreshtoken == null)
-            {
-                this.refreshtoken = new RefreshToken(configuration, log, jWTTokenService, oauth, encryptSvc);
-            }
+
         }
 
-        public AuthenticationDTO AuthenticateGetToken(AuthorizationGrantRequestDTO authorizationGrantRequest)
+        public AuthenticationDTO AuthenticateGetToken(TokenDTO tokenDTO)
         {
-            string _refreshToken = HttpUtility.UrlDecode(authorizationGrantRequest.Refresh_Token);
-            RefreshTokenDTO refauth = new RefreshTokenDTO { Authorization = _refreshToken };
+            string _refreshTokenold = HttpUtility.UrlDecode(tokenDTO.Refresh_Token);
+            string _refreshToken = refreshtoken.GenerateToken(tokenDTO);
+            RefreshTokenDTO refauth = new RefreshTokenDTO { Authorization = _refreshTokenold };
             AuthenticationDTO auth = new AuthenticationDTO();
             try
             {
-                ValidationResult results = refreshvalidation.Validate(refauth);
+              //  ValidationResult results = refreshvalidation.Validate(refauth);
                 Authorize authorize = oauth.Authorize.Where(x => x.Code == refauth.Authorization).FirstOrDefault();
                 User user = oauth.User.SingleOrDefault(x => x.UserId == authorize.UserId);
                 UserDTO userDTO = mapper.Map<UserDTO>(user);
                 auth.token_type = config["TokenType"];
-                auth.access_token = JWTTokenService.GenerateAccessToken(userDTO);
-                auth.refresh_token = HttpUtility.UrlEncode(refreshtoken.GetRefreshToken(authorize.Code));
+                auth.access_token = JWTToken.GenerateToken(tokenDTO);
+                auth.refresh_token = HttpUtility.UrlEncode(_refreshToken);
+                authorize.Code = _refreshToken;
+                oauth.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -47,6 +46,6 @@ namespace Application.Authentication
             return auth;
         }
 
-      
+
     }
 }

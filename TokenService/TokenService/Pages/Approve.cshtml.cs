@@ -22,9 +22,9 @@ namespace TokenService.Pages
         public AuthorizationRequestDTO authorizationRequestDTO { get; set; }
         public void OnGet(AuthorizationGrantType Response_Type, string Client_Id, string Redirect_Uri, string Scope, string State)
         {
-            ClientService clientService = new ClientService(configuration,
+            ClientService clientService = new ClientService(refToken, configuration,
                       itsLogger,
-                      JWTTokenService,
+                      jwtToken,
                       OAuthDbContext,
                       EncryptionService);
             authorizationRequestDTO = new AuthorizationRequestDTO
@@ -43,9 +43,10 @@ namespace TokenService.Pages
         {
             AuthorizationResponseDTO authResponseDTO = new AuthorizationResponseDTO();
             IAuthorizationService authorizationService = new AuthorizationService(
+                refToken,
                          configuration,
                          itsLogger,
-                         JWTTokenService,
+                         jwtToken,
                          OAuthDbContext,
                          EncryptionService);
             authResponseDTO = authorizationService.GetAuthorization(authorizationRequestDTO);

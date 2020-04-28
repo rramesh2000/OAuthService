@@ -13,30 +13,29 @@ namespace Application.Authentication
     public class AuthenticateCode : BaseService, IAuthenticate
     {
         public string SecretKey { get; set; }
-        RefreshToken refreshtoken { get; set; }
 
-        public AuthenticateCode(RefreshToken refreshtoken, IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(configuration, log, jWTTokenService, oauth, encryptSvc)
+        public AuthenticateCode(ITokenService refreshtoken, IConfiguration configuration, ITSLogger log, ITokenService jWTTokenService, ITokenServiceDbContext oauth, IEncryptionService encryptSvc) : base(refreshtoken, configuration, log, jWTTokenService, oauth, encryptSvc)
         {
-            this.refreshtoken = refreshtoken;
-            if (this.refreshtoken==null)
-            {
-                 this.refreshtoken = new RefreshToken(configuration, log, jWTTokenService, oauth, encryptSvc);                     
-            }
+
         }
 
-        public AuthenticationDTO AuthenticateGetToken(AuthorizationGrantRequestDTO authorizationGrantRequest)
+        public AuthenticationDTO AuthenticateGetToken(TokenDTO tokenDTO)
         {
             AuthenticationDTO auth = new AuthenticationDTO();
             try
             {
-                string _code = HttpUtility.UrlDecode(authorizationGrantRequest.Code);
+                string _code = HttpUtility.UrlDecode(tokenDTO.Code);
+                string _refreshToken = refreshtoken.GenerateToken(tokenDTO);
+
                 //ValidationResult results = refreshvalidation.Validate(refauth);
                 Authorize authorize = oauth.Authorize.SingleOrDefault(x => x.Code == _code);
                 User user = oauth.User.SingleOrDefault(x => x.UserId == authorize.UserId);
                 auth.token_type = config["TokenType"];
                 UserDTO userDTO = mapper.Map<UserDTO>(user);
-                auth.access_token = JWTTokenService.GenerateAccessToken(userDTO);
-                auth.refresh_token = HttpUtility.UrlEncode(refreshtoken.GetRefreshToken(_code));
+                auth.access_token = JWTToken.GenerateToken(tokenDTO);
+                auth.refresh_token = HttpUtility.UrlEncode(_refreshToken);
+                authorize.Code = _refreshToken;
+                oauth.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -45,7 +44,7 @@ namespace Application.Authentication
             }
             return auth;
         }
-         
+
 
     }
 }
