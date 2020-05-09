@@ -1,5 +1,7 @@
+using Infrastructure.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,10 +21,12 @@ namespace TokenService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-
             services.AddControllers();
             services.AddControllers().AddNewtonsoftJson();
             services.AddSingleton<IConfiguration>(Configuration);
+            services.AddDbContext<OAuthContext>(options => options.UseSqlServer(Configuration.GetConnectionString("OAuthDatabase")));
+
+            services.AddOAuthServices();
             services.AddSwaggerDocument(config =>
             {
                 config.PostProcess = document =>
@@ -49,25 +53,18 @@ namespace TokenService
         {
             app.UseOpenApi();
             app.UseSwaggerUi3();
-
             app.UseExceptionHandler("/errors/500");
-
             // Handles non-success status codes with empty body
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
             });
-
         }
     }
 }

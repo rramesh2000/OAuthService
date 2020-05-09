@@ -6,6 +6,12 @@ namespace Infrastructure.Models
 {
     public partial class OAuthContext : DbContext, ITokenServiceDbContext
     {
+
+        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Client> Client { get; set; }
+        public virtual DbSet<Authorize> Authorize { get; set; }
+
+
         public OAuthContext()
         {
         }
@@ -15,15 +21,7 @@ namespace Infrastructure.Models
         {
         }
 
-        public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<Client> Client { get; set; }
-        public virtual DbSet<Authorize> Authorize { get; set; }
 
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

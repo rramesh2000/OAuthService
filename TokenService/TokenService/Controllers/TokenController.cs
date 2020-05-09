@@ -12,28 +12,41 @@ namespace TokenService.Controllers
 {
     [Produces("application/json")]
     [ApiController]
-    public class TokenController : BaseController
+    public class TokenController : ControllerBase
     {
-        public TokenController(IConfiguration configuration) : base(configuration)
+        private IEncryptionService _encryptionService;
+        private IConfiguration _configuration;
+        private ITokenService _tokenService;
+        private ITokenService _refreshService;
+        private ITSLogger _tSLogger;
+        private ITokenServiceDbContext _tokenServiceDbContext;
+
+
+        public TokenController(IConfiguration configuration, IEncryptionService encryption, ITokenService tokenService, ITokenService refrshService, ITSLogger tSLogger, ITokenServiceDbContext tokenServiceDbContext)
         {
+            _configuration = configuration;
+            _encryptionService = encryption;
+            _tokenService = tokenService;
+            _refreshService = refrshService;
+            _tSLogger = tSLogger;
+            _tokenServiceDbContext = tokenServiceDbContext;
         }
 
 
-
         [HttpPost]
-
         [Route("/api/token")]
         public IActionResult Post(AuthorizationGrantRequestDTO token)
         {
             AuthenticationDTO Authorization = new AuthenticationDTO();
             try
             {
-                IAuthenticationService tm = new AuthenticationService(RefreshToken,
-                    configuration,
-                    itsLogger,
-                    JWTToken,
-                    OAuthDbContext,
-                    EncryptionService);
+                IAuthenticationService tm = new AuthenticationService(
+                    _refreshService,
+                    _configuration,
+                    _tSLogger,
+                   _tokenService,
+                    _tokenServiceDbContext,
+                    _encryptionService);
                 Authorization = tm.Authenticate(token);
             }
             catch (InvalidUserException exUser)
@@ -56,12 +69,12 @@ namespace TokenService.Controllers
             try
             {
                 TokenValidationService tm = new TokenValidationService(
-                    RefreshToken,
-                    configuration,
-                    itsLogger,
-                    JWTToken,
-                    OAuthDbContext,
-                    EncryptionService);
+                   _refreshService,
+                    _configuration,
+                    _tSLogger,
+                   _tokenService,
+                    _tokenServiceDbContext,
+                    _encryptionService);
                 tmp = tm.VerifyToken(auth);
             }
             catch (InvalidTokenException exToken)

@@ -1,4 +1,6 @@
-﻿using Application.Common.Exceptions;
+﻿using Application.Authentication;
+using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.Registration;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +12,26 @@ namespace TokenService.Controllers
 {
     [Produces("application/json")]
     [ApiController]
-    public class RegisterController : BaseController
+    public class RegisterController : ControllerBase
     {
-        public RegisterController(IConfiguration configuration) : base(configuration)
+        private IEncryptionService _encryptionService;
+        private IConfiguration _configuration;
+        private ITokenService _tokenService;
+        private ITokenService _refreshService;
+        private ITSLogger _tSLogger;
+        private ITokenServiceDbContext _tokenServiceDbContext;
+
+
+        public RegisterController(IConfiguration configuration, IEncryptionService encryption, ITokenService tokenService, ITokenService refrshService, ITSLogger tSLogger, ITokenServiceDbContext tokenServiceDbContext)
         {
+            _configuration = configuration;
+            _encryptionService = encryption;
+            _tokenService = tokenService;
+            _refreshService = refrshService;
+            _tSLogger = tSLogger;
+            _tokenServiceDbContext = tokenServiceDbContext;
         }
+
 
         // POST: api/Token
         [HttpPost]
@@ -23,7 +40,13 @@ namespace TokenService.Controllers
         {
             try
             {
-                RegistrationService registrationService = new RegistrationService(RefreshToken, configuration, itsLogger, JWTToken, OAuthDbContext, EncryptionService);
+                RegistrationService registrationService = new RegistrationService(
+                      _refreshService,
+                    _configuration,
+                    _tSLogger,
+                   _tokenService,
+                    _tokenServiceDbContext,
+                    _encryptionService);
                 user = registrationService.SaveUser(user);
             }
             catch (InvalidUserException exUser)
@@ -44,7 +67,13 @@ namespace TokenService.Controllers
         {
             try
             {
-                RegistrationService registrationService = new RegistrationService(RefreshToken, configuration, itsLogger, JWTToken, OAuthDbContext, EncryptionService);
+                RegistrationService registrationService = new RegistrationService(
+                      _refreshService,
+                    _configuration,
+                    _tSLogger,
+                   _tokenService,
+                    _tokenServiceDbContext,
+                    _encryptionService);
                 client = registrationService.SaveClient(client);
             }
             catch (InvalidUserException exUser)

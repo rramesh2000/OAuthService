@@ -36,7 +36,7 @@ namespace WebAppClient.Pages
         {
 
             string Url = "https://localhost:44306/api/token";
-            string Client_Id = "A12D3F38-89BB-42DB-925C-7D78D864C7E3";
+            string Client_Id = "9EF5B182-D476-41CD-8B5B-05BB2E9D3C83";
             string Grant_Type = "authorization_code";
             string Code = HttpUtility.UrlEncode(authorization.Code);
             string responseBody = await GetToken(Url, Client_Id, Grant_Type, Code, null);
@@ -48,7 +48,7 @@ namespace WebAppClient.Pages
         public async Task<IActionResult> OnPostRefreshAsync()
         {
             string Url = "https://localhost:44306/api/token";
-            string Client_Id = "A12D3F38-89BB-42DB-925C-7D78D864C7E3";
+            string Client_Id = "9EF5B182-D476-41CD-8B5B-05BB2E9D3C83";
             string Grant_Type = "refresh_token";
             string refresh_token = HttpUtility.UrlEncode(authorization.refresh_token);
             string responseBody = await GetToken(Url, Client_Id, Grant_Type, null, refresh_token);
